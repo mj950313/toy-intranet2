@@ -1,5 +1,5 @@
 import { useSelector } from "react-redux";
-import { UserType } from "../user";
+import { UserType } from "../user.ts";
 
 type StateType = {
   user: UserType;
