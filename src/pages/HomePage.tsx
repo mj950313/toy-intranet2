@@ -1,23 +1,16 @@
-import { useDispatch, useSelector } from "react-redux";
-import { decrement, increment, incrementByAmount } from "../store/counterSlice";
+import { useSelector } from "react-redux";
+import { UserType } from "../user";
 
-type State = {
-  counter: {
-    value: number;
-  };
+type StateType = {
+  user: UserType;
 };
 
 export default function HomePage() {
-  const count = useSelector((state: State) => state.counter.value);
-  const dispatch = useDispatch();
+  const user = useSelector((state: StateType) => state.user);
 
   return (
     <>
       <h1>HomePage</h1>
-      <p>Counter: {count}</p>
-      <button onClick={() => dispatch(increment())}>+</button>
-      <button onClick={() => dispatch(decrement())}>-</button>
-      <button onClick={() => dispatch(incrementByAmount(5))}>더하기 5</button>
     </>
   );
 }
