@@ -1,9 +1,9 @@
 import { createSlice } from "@reduxjs/toolkit";
-import { initialUser } from "../user.ts";
+import { initialUsers } from "../user.ts";
 
 export const counterSlice = createSlice({
-  name: "user",
-  initialState: initialUser,
+  name: "users",
+  initialState: initialUsers,
   reducers: {},
 });
 
