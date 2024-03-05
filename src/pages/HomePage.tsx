@@ -1,16 +1,10 @@
 import { useSelector } from "react-redux";
-import { UserType } from "../types/user.ts";
+import { StateType } from "../types/user.ts";
 import { formatDate } from "../util/date.ts";
 import TimeTable from "../components/TimeTable.tsx";
 import { useState } from "react";
 import PrevButton from "../icons/PrevButton.tsx";
 import NextButton from "../icons/NextButton.tsx";
-
-type StateType = {
-  user: {
-    users: UserType[];
-  };
-};
 
 export default function HomePage() {
   const users = useSelector((state: StateType) => state.user.users);
