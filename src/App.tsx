@@ -9,8 +9,17 @@ import Header from "./components/Header";
 import MyPage from "./pages/MyPage";
 import LoginPage from "./pages/LoginPage";
 import CalenderPage from "./pages/CalenderPage";
+import { useEffect } from "react";
+import { useDispatch } from "react-redux";
+import { fetchUsersData } from "./store/userActions";
 
 function App() {
+  const dispatch = useDispatch();
+
+  useEffect(() => {
+    dispatch(fetchUsersData());
+  }, [dispatch]);
+
   return (
     <>
       <Router>

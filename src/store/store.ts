@@ -3,6 +3,6 @@ import counterSlice from "./userSlice.ts";
 
 export default configureStore({
   reducer: {
-    users: counterSlice,
+    user: counterSlice,
   },
 });
