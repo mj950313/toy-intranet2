@@ -9,7 +9,7 @@ export const counterSlice = createSlice({
       console.log(action.payload);
       console.log(state)
     }
-  },
+  }
 });
 
 export default counterSlice.reducer;

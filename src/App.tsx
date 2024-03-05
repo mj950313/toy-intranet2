@@ -1,4 +1,9 @@
-import { Route, BrowserRouter as Router, Routes } from "react-router-dom";
+import {
+  Navigate,
+  Route,
+  BrowserRouter as Router,
+  Routes,
+} from "react-router-dom";
 import HomePage from "./pages/HomePage";
 import Header from "./components/Header";
 import MyPage from "./pages/MyPage";
@@ -10,12 +15,15 @@ function App() {
     <>
       <Router>
         <Header />
-        <Routes>
-          <Route path="/" element={<HomePage />} />
-          <Route path="/mypage" element={<MyPage />} />
-          <Route path="/login" element={<LoginPage />} />
-          <Route path="/calender" element={<CalenderPage />} />
-        </Routes>
+        <div className="w-[1200px] mx-auto">
+          <Routes>
+            <Route path="/" element={<HomePage />} />
+            <Route path="/mypage" element={<MyPage />} />
+            <Route path="/login" element={<LoginPage />} />
+            <Route path="/calender" element={<CalenderPage />} />
+            <Route path="*" element={<Navigate to="/" />} />
+          </Routes>
+        </div>
       </Router>
     </>
   );

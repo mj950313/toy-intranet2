@@ -2,7 +2,12 @@
 export default {
   content: ["./src/**/*.{js,jsx,ts,tsx}"],
   theme: {
-    extend: {},
+    extend: {
+      colors: {
+        myorange: "#f46804",
+        mygray: "#1c1c1c",
+      },
+    },
   },
   plugins: [],
 };
