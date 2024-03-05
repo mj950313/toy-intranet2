@@ -1,4 +1,5 @@
 import { initializeApp } from "firebase/app";
+import { getDatabase, ref, get } from "firebase/database"
 import { getAuth, onAuthStateChanged, signInWithEmailAndPassword, signOut } from "firebase/auth";
 
 const firebaseConfig = {
@@ -10,25 +11,28 @@ const firebaseConfig = {
 
 const app = initializeApp(firebaseConfig);
 const auth = getAuth(app);
+const database = getDatabase(app);
 
 export const login = async (email:string, password:string) => {
-  try {
-    await signInWithEmailAndPassword(auth, email, password);
-  } catch (error) {
-    throw error;
-  }
+  await signInWithEmailAndPassword(auth, email, password);
 };
 
 export const logout = async () => {
-  try {
-    await signOut(auth);
-  } catch (error) {
-    throw error;
-  }
+  await signOut(auth);
 };
+
 
 export const listenToAuthChanges = (callback) => {
   return onAuthStateChanged(auth, (user) => {
     callback(user);
+    user && usersData();
   });
 };
+
+async function usersData() {
+  return get(ref(database,'users')).then((snapshot) => {
+    if(snapshot.exists()) {
+      const users = snapshot.val()
+    }
+  })
+}
