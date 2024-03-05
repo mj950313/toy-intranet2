@@ -1,8 +1,6 @@
 import { useEffect, useState } from "react";
 import { login, logout, listenToAuthChanges } from "../api/firebase";
 import { useNavigate } from "react-router-dom";
-import { fetchUsersData } from "../store/userActions";
-import { useDispatch, useSelector } from "react-redux";
 
 const LoginPage = () => {
   const [authUser, setAuthUser] = useState(null);
@@ -13,13 +11,6 @@ const LoginPage = () => {
   });
 
   const navigate = useNavigate();
-  const dispatch = useDispatch();
-  const users = useSelector((state) => state.users);
-  console.log(users);
-
-  useEffect(() => {
-    dispatch(fetchUsersData());
-  }, [dispatch]);
 
   useEffect(() => {
     const unsubscribe = listenToAuthChanges((user) => {

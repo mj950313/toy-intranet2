@@ -1,15 +1,19 @@
 import { useSelector } from "react-redux";
-import { UserType } from "../user.ts";
+import { UserType } from "../types/user.ts";
 import { formatDate } from "../util/date.ts";
-import { useState } from "react";
 import TimeTable from "../components/TimeTable.tsx";
+import { useState } from "react";
+import PrevButton from "../icons/PrevButton.tsx";
+import NextButton from "../icons/NextButton.tsx";
 
 type StateType = {
-  users: UserType[];
+  user: {
+    users: UserType[];
+  };
 };
 
 export default function HomePage() {
-  const users = useSelector((state: StateType) => state.users);
+  const users = useSelector((state: StateType) => state.user.users);
 
   const [date, setDate] = useState(new Date());
 
@@ -28,11 +32,11 @@ export default function HomePage() {
   return (
     <section>
       <div>
-        <button onClick={goToPrevDay} className="bg-myorange text-white mr-4">
-          뒤로
+        <button onClick={goToPrevDay} className="border border-myorange">
+          <PrevButton />
         </button>
-        <button onClick={goToNextDay} className="bg-myorange text-white">
-          앞으로
+        <button onClick={goToNextDay} className="border border-myorange">
+          <NextButton />
         </button>
         <p>{formatDate(date)}</p>
       </div>

@@ -1,4 +1,4 @@
-import { UserType } from "../user";
+import { UserType } from "../types/user";
 import { formatTableDate } from "../util/date";
 
 type PropsType = {
