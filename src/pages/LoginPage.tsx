@@ -11,19 +11,7 @@ const LoginPage = () => {
 
   const navigate = useNavigate();
 
-<<<<<<< HEAD
-  useEffect(() => {
-    const unsubscribe = listenToAuthChanges((user) => {
-      setAuthUser(user);
-    });
-
-    return () => unsubscribe();
-  }, []);
-
   const handleLogin = (e: React.FormEvent) => {
-=======
-  const handleLogin = async (e: React.FormEvent) => {
->>>>>>> develop
     e.preventDefault();
     try {
       login(formState.email, formState.password);
@@ -36,41 +24,32 @@ const LoginPage = () => {
     }
   };
 
-<<<<<<< HEAD
-  const handleLogout = () => {
-    try {
-      logout();
-      setFormState((prev) => ({ ...prev, error: "" }));
-      alert("로그아웃 성공!");
-    } catch (error) {
-      alert("로그아웃 실패!");
-    }
-  };
-
-=======
->>>>>>> develop
   return (
     <div className="flex justify-center items-center">
       <form
         className="w-[400px] rounded-lg p-4 bg-white/10 flex flex-col gap-4"
         onSubmit={handleLogin}
       >
-        <label className="text-white flex flex-col">
-          Email
+        <label htmlFor="email" className="text-white flex flex-col">
+          EMAIL
           <input
             className="text-black"
             type="email"
+            id="email"
+            name="email"
             value={formState.email}
             onChange={(e) =>
               setFormState((prev) => ({ ...prev, email: e.target.value }))
             }
           />
         </label>
-        <label className="text-white flex flex-col">
-          Password
+        <label htmlFor="password" className="text-white flex flex-col">
+          PASSWORD
           <input
             className="text-black"
             type="password"
+            id="password"
+            name="password"
             value={formState.password}
             onChange={(e) =>
               setFormState((prev) => ({ ...prev, password: e.target.value }))
