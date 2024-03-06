@@ -1,7 +1,15 @@
+export type StateType = {
+  user: {
+    users: UserType[];
+    loginUser: UserType | null;
+  };
+};
+
 export type UserType = {
   id: string;
   email: string;
   name: string;
+  salary: number;
   schedules: SchedulesType[];
 };
 

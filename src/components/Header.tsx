@@ -1,8 +1,15 @@
 import { Link } from "react-router-dom";
-import { auth } from "../api/firebase";
+import { getAuth, signOut } from "firebase/auth";
+import { useSelector } from "react-redux";
+import { StateType } from "../types/user";
 
 export default function Header() {
-  console.log(auth.currentUser);
+  const auth = getAuth();
+  const loginUser = useSelector((state: StateType) => state.user.loginUser);
+
+  const handleSignout = () => {
+    signOut(auth);
+  };
 
   return (
     <header className="bg-mygray sticky top-0 mb-16 text-myorange">
@@ -10,10 +17,11 @@ export default function Header() {
         <Link to="/" className="font-bold text-2xl">
           TOY FIVE
         </Link>
-        <nav className="flex gap-4">
-          <Link to="/mypage">mypage</Link>
-          <Link to="/calender">calender</Link>
-          <Link to="/login">login</Link>
+        <nav className="flex gap-4 items-center">
+          {loginUser && <Link to="/mypage">Mypage</Link>}
+          {loginUser && <Link to="/calender">Calender</Link>}
+          {!loginUser && <Link to="/login">Login</Link>}
+          {loginUser && <button onClick={handleSignout}>Logout</button>}
         </nav>
       </div>
     </header>

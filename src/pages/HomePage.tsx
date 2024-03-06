@@ -1,46 +1,55 @@
 import { useSelector } from "react-redux";
-import { UserType } from "../types/user.ts";
-import { formatDate } from "../util/date.ts";
+import { StateType } from "../types/user.ts";
+import { formatDate, formatTableDate } from "../util/date.ts";
 import TimeTable from "../components/TimeTable.tsx";
-import { useState } from "react";
+import { useRef, useState } from "react";
 import PrevButton from "../icons/PrevButton.tsx";
 import NextButton from "../icons/NextButton.tsx";
-
-type StateType = {
-  user: {
-    users: UserType[];
-  };
-};
+import CalendarIcon from "../icons/CalendarIcon.tsx";
 
 export default function HomePage() {
   const users = useSelector((state: StateType) => state.user.users);
 
-  const [date, setDate] = useState(new Date());
+  const [datePicker, setDatePicker] = useState(formatTableDate(new Date()));
 
-  const goToPrevDay = () => {
-    const prevDay = new Date(date);
-    prevDay.setDate(date.getDate() - 1);
-    setDate(prevDay);
-  };
+  const calendarRef = useRef<HTMLInputElement | null>(null);
 
-  const goToNextDay = () => {
-    const nextDay = new Date(date);
-    nextDay.setDate(date.getDate() + 1);
-    setDate(nextDay);
+  const goToDay = (num: number) => {
+    const newDate = new Date(datePicker);
+    const currentDate = new Date(datePicker);
+    newDate.setDate(currentDate.getDate() + num);
+    setDatePicker(formatTableDate(newDate));
   };
 
   return (
     <section>
-      <div>
-        <button onClick={goToPrevDay} className="border border-myorange">
-          <PrevButton />
-        </button>
-        <button onClick={goToNextDay} className="border border-myorange">
-          <NextButton />
-        </button>
-        <p>{formatDate(date)}</p>
+      <div className="flex">
+        <div>
+          <button
+            onClick={() => goToDay(-1)}
+            className="border border-myorange"
+          >
+            <PrevButton />
+          </button>
+          <button onClick={() => goToDay(1)} className="border border-myorange">
+            <NextButton />
+          </button>
+        </div>
+        <p>{formatDate(new Date(datePicker))}</p>
+        <div className="relative">
+          <label onClick={() => calendarRef.current?.showPicker()}>
+            <CalendarIcon />
+          </label>
+          <input
+            ref={calendarRef}
+            value={datePicker}
+            onChange={(e) => setDatePicker(e.target.value)}
+            type="date"
+            className="hidden absolute top-0 right-0"
+          />
+        </div>
       </div>
-      <TimeTable users={users} date={date} />
+      <TimeTable users={users} date={datePicker} />
     </section>
   );
 }

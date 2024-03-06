@@ -1,7 +1,8 @@
+import { Dispatch } from "@reduxjs/toolkit";
 import { replaceUsers } from "./userSlice";
 
 export function fetchUsersData() {
-  return async (dispatch) => {
+  return async (dispatch: Dispatch) => {
     const fetchData = async () => {
       const response = await fetch(
         "https://toylogin2-default-rtdb.asia-southeast1.firebasedatabase.app/users.json"
