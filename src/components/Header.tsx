@@ -1,6 +1,9 @@
 import { Link } from "react-router-dom";
+import { auth } from "../api/firebase";
 
 export default function Header() {
+  console.log(auth.currentUser);
+
   return (
     <header className="bg-mygray sticky top-0 mb-16 text-myorange">
       <div className="flex justify-between w-[1200px] mx-auto py-4">

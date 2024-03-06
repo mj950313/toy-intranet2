@@ -1,8 +1,6 @@
 import { useEffect, useState } from "react";
 import { login, logout, listenToAuthChanges } from "../api/firebase";
 import { useNavigate } from "react-router-dom";
-import { fetchUsersData } from "../store/userActions";
-import { useDispatch, useSelector } from "react-redux";
 
 const LoginPage = () => {
   const [authUser, setAuthUser] = useState(null);
@@ -13,13 +11,6 @@ const LoginPage = () => {
   });
 
   const navigate = useNavigate();
-  const dispatch = useDispatch();
-  const users = useSelector((state) => state.users);
-  console.log(users);
-
-  useEffect(() => {
-    dispatch(fetchUsersData());
-  }, [dispatch]);
 
   useEffect(() => {
     const unsubscribe = listenToAuthChanges((user) => {
@@ -29,10 +20,10 @@ const LoginPage = () => {
     return () => unsubscribe();
   }, []);
 
-  const handleLogin = async (e: React.FormEvent) => {
+  const handleLogin = (e: React.FormEvent) => {
     e.preventDefault();
     try {
-      await login(formState.email, formState.password);
+      login(formState.email, formState.password);
       navigate("/");
     } catch (err) {
       setFormState((prev) => ({
@@ -42,9 +33,9 @@ const LoginPage = () => {
     }
   };
 
-  const handleLogout = async () => {
+  const handleLogout = () => {
     try {
-      await logout();
+      logout();
       setFormState((prev) => ({ ...prev, error: "" }));
       alert("로그아웃 성공!");
     } catch (error) {
