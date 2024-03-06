@@ -1,9 +1,8 @@
 import { UserType } from "../types/user";
-import { formatTableDate } from "../util/date";
 
 type PropsType = {
   users: UserType[];
-  date: Date;
+  date: string;
 };
 
 const times = [
@@ -25,9 +24,7 @@ export default function TimeTable({ users, date }: PropsType) {
         </div>
       </div>
       {users.map((user) => {
-        const currentSchedule = user.schedules.find(
-          (s) => s.date === formatTableDate(date)
-        );
+        const currentSchedule = user.schedules.find((s) => s.date === date);
 
         const scheduleTime = currentSchedule?.schedule.map((s) => s.time);
 

@@ -7,8 +7,8 @@ export default function Header() {
   const auth = getAuth();
   const loginUser = useSelector((state: StateType) => state.user.loginUser);
 
-  const handleSignout = async () => {
-    await signOut(auth);
+  const handleSignout = () => {
+    signOut(auth);
   };
 
   return (
