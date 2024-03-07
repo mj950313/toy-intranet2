@@ -3,7 +3,7 @@ import HomePage from "./pages/HomePage";
 import Header from "./components/Header";
 import MyPage from "./pages/MyPage";
 import LoginPage from "./pages/LoginPage";
-import CalenderPage from "./pages/CalenderPage";
+import CalendarPage from "./pages/CalendarPage";
 import { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { fetchUsersData, sendUsersData } from "./store/userActions";
