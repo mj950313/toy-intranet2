@@ -50,16 +50,11 @@ function App() {
         <Routes>
           <Route path="/" element={<HomePage />} />
           <Route path="/mypage" element={<MyPage />} />
-<<<<<<< HEAD
-          <Route path="/login" element={<LoginPage />} />
-          <Route path="/calender" element={<CalendarPage />} />
-=======
           <Route
             path="/login"
             element={loginUser ? <Navigate to="/" /> : <LoginPage />}
           />
-          <Route path="/calender" element={<CalenderPage />} />
->>>>>>> develop
+          <Route path="/calender" element={<CalendarPage />} />
           <Route path="*" element={<Navigate to="/" />} />
         </Routes>
       </div>
