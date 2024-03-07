@@ -1,5 +1,6 @@
 import { useState } from "react";
-import { SchedulesByDateType, UserType } from "../types/user";
+import { times } from "../util/date";
+import { UserType } from "../types/user";
 import ScheduleModal from "./ScheduleModal";
 
 type PropsType = {
@@ -7,18 +8,13 @@ type PropsType = {
   date: string;
 };
 
-const times = [
-  0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21,
-  22, 23,
-];
-
 export default function TimeTable({ users, date }: PropsType) {
-  const [selectedSchedule, setSelectedSchedule] = useState<SchedulesByDateType>({
-    id: "",
-    date: "",
-    schedules: [],
-  });
+  const [userId, setUserId] = useState("");
   const [isOpen, setIsOpen] = useState(false);
+
+  const selectedSchedule = users
+    .find((user) => user.id === userId)
+    ?.schedulesByDate.find((schedule) => schedule.date === date);
 
   return (
     <>
@@ -59,9 +55,7 @@ export default function TimeTable({ users, date }: PropsType) {
             >
               <p
                 onClick={() => {
-                  setSelectedSchedule(
-                    currentSchedule || { id: "", date: "", schedules: [] }
-                  );
+                  setUserId(user.id);
                   setIsOpen(true);
                 }}
                 className="w-[120px] border-r shrink-0 pl-4 h-[40px] leading-[40px]"
@@ -88,7 +82,15 @@ export default function TimeTable({ users, date }: PropsType) {
           );
         })}
       </div>
-      {isOpen && <ScheduleModal selectedSchedule={selectedSchedule} />}
+      {isOpen && (
+        <ScheduleModal
+          selectedSchedule={
+            selectedSchedule || { id: "", date: "", schedules: [] }
+          }
+          date={date}
+          onClose={() => setIsOpen(false)}
+        />
+      )}
     </>
   );
 }
