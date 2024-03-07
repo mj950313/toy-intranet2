@@ -1,10 +1,9 @@
 import { initializeApp } from "firebase/app";
-import { getDatabase, ref, get } from "firebase/database";
 import {
+  User,
   getAuth,
   onAuthStateChanged,
   signInWithEmailAndPassword,
-  signOut,
 } from "firebase/auth";
 
 const firebaseConfig = {
@@ -16,27 +15,15 @@ const firebaseConfig = {
 
 const app = initializeApp(firebaseConfig);
 const auth = getAuth(app);
-const database = getDatabase(app);
 
 export const login = async (email: string, password: string) => {
   await signInWithEmailAndPassword(auth, email, password);
 };
 
-export const logout = async () => {
-  await signOut(auth);
-};
 
-export const listenToAuthChanges = (callback) => {
+
+export const listenToAuthChanges = (callback: (arg0: User | null) => void) => {
   return onAuthStateChanged(auth, (user) => {
     callback(user);
-    user && usersData();
   });
 };
-
-async function usersData() {
-  return get(ref(database, "users")).then((snapshot) => {
-    if (snapshot.exists()) {
-      const users = snapshot.val();
-    }
-  });
-}
