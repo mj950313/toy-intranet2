@@ -13,9 +13,10 @@ type Props = {
 };
 
 const emptySchedule = { id: "", title: "", time: "", description: "" };
+const emptyFn = () => {};
 
 export default function ScheduleForm({
-  onAddClose,
+  onAddClose = emptyFn,
   onEditClose,
   date,
   schedule = emptySchedule,
@@ -96,7 +97,13 @@ export default function ScheduleForm({
       <div className="flex justify-center gap-4">
         <button
           type="button"
-          onClick={onEditClose}
+          onClick={() => {
+            if (id) {
+              onEditClose();
+            } else {
+              onAddClose();
+            }
+          }}
           className="bg-white text-myorange px-2 rounded-sm"
         >
           취소
