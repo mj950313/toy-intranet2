@@ -3,7 +3,7 @@ import HomePage from "./pages/HomePage";
 import Header from "./components/Header";
 import MyPage from "./pages/MyPage";
 import LoginPage from "./pages/LoginPage";
-import CalenderPage from "./pages/CalenderPage";
+import CalendarPage from "./pages/CalendarPage";
 import { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { fetchUsersData } from "./store/userActions";
@@ -43,7 +43,7 @@ function App() {
           <Route path="/" element={<HomePage />} />
           <Route path="/mypage" element={<MyPage />} />
           <Route path="/login" element={<LoginPage />} />
-          <Route path="/calender" element={<CalenderPage />} />
+          <Route path="/calender" element={<CalendarPage />} />
           <Route path="*" element={<Navigate to="/" />} />
         </Routes>
       </div>
