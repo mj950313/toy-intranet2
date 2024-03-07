@@ -2,7 +2,14 @@ export type StateType = {
   user: {
     users: UserType[];
     loginUser: UserType | null;
+    changed: boolean;
   };
+};
+
+export type ReducerStateType = {
+  users: UserType[];
+  loginUser: UserType | null;
+  changed: boolean;
 };
 
 export type UserType = {
@@ -10,10 +17,10 @@ export type UserType = {
   email: string;
   name: string;
   salary: number;
-  schedulesByDate: SchdulesByDateType[];
+  schedulesByDate: SchedulesByDateType[];
 };
 
-export type SchdulesByDateType = {
+export type SchedulesByDateType = {
   id: string;
   date: string;
   schedules: ScheduleType[];

@@ -45,7 +45,7 @@ export default function HomePage() {
           onClick={() => calendarRef.current?.showPicker()}
           className="flex relative w-[30px] h-[30px]"
         >
-          <CalendarIcon />
+          <CalendarIcon className="w-full h-full absolute top-0 left-0 z-10 cursor-pointer" />
           <input
             ref={calendarRef}
             value={datePicker}

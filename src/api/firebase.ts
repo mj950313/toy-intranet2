@@ -20,6 +20,8 @@ export const login = async (email: string, password: string) => {
   await signInWithEmailAndPassword(auth, email, password);
 };
 
+
+
 export const listenToAuthChanges = (callback: (arg0: User | null) => void) => {
   return onAuthStateChanged(auth, (user) => {
     callback(user);
