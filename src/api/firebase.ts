@@ -4,7 +4,6 @@ import {
   getAuth,
   onAuthStateChanged,
   signInWithEmailAndPassword,
-  signOut,
 } from "firebase/auth";
 
 const firebaseConfig = {
@@ -17,12 +16,8 @@ const firebaseConfig = {
 const app = initializeApp(firebaseConfig);
 const auth = getAuth(app);
 
-export const login = (email: string, password: string) => {
-  signInWithEmailAndPassword(auth, email, password);
-};
-
-export const logout = () => {
-  signOut(auth);
+export const login = async (email: string, password: string) => {
+  await signInWithEmailAndPassword(auth, email, password);
 };
 
 export const listenToAuthChanges = (callback: (arg0: User | null) => void) => {
