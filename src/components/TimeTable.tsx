@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { SchdulesByDateType, UserType } from "../types/user";
+import { SchedulesByDateType, UserType } from "../types/user";
 import ScheduleModal from "./ScheduleModal";
 
 type PropsType = {
@@ -13,7 +13,7 @@ const times = [
 ];
 
 export default function TimeTable({ users, date }: PropsType) {
-  const [selectedSchedule, setSelectedSchedule] = useState<SchdulesByDateType>({
+  const [selectedSchedule, setSelectedSchedule] = useState<SchedulesByDateType>({
     id: "",
     date: "",
     schedules: [],

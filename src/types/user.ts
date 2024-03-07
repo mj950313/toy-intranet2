@@ -10,10 +10,10 @@ export type UserType = {
   email: string;
   name: string;
   salary: number;
-  schedulesByDate: SchdulesByDateType[];
+  schedulesByDate: SchedulesByDateType[];
 };
 
-export type SchdulesByDateType = {
+export type SchedulesByDateType = {
   id: string;
   date: string;
   schedules: ScheduleType[];

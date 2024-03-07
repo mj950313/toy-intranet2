@@ -1,7 +1,7 @@
-import { SchdulesByDateType } from "../types/user";
+import { SchedulesByDateType } from "../types/user";
 
 type PropsType = {
-  selectedSchedule: SchdulesByDateType;
+  selectedSchedule: SchedulesByDateType;
 };
 
 export default function ScheduleModal({ selectedSchedule }: PropsType) {
