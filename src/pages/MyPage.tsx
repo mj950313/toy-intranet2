@@ -6,7 +6,7 @@ const MyPage: React.FC = () => {
   const loginUser: UserType | null = useSelector((state: StateType) => state.user.loginUser);
   const [showCorrectionForm, setShowCorrectionForm] = useState<boolean>(false);
   const [correctionReason, setCorrectionReason] = useState<string>('');
-
+  
   
 
   // 정정 신청 창을 토글합니다.
