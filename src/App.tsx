@@ -54,7 +54,7 @@ function App() {
             path="/login"
             element={loginUser ? <Navigate to="/" /> : <LoginPage />}
           />
-          <Route path="/calender" element={<CalenderPage />} />
+          <Route path="/calender" element={<CalendarPage />} />
           <Route path="*" element={<Navigate to="/" />} />
         </Routes>
       </div>
