@@ -2,7 +2,14 @@ export type StateType = {
   user: {
     users: UserType[];
     loginUser: UserType | null;
+    changed: boolean;
   };
+};
+
+export type ReducerStateType = {
+  users: UserType[];
+  loginUser: UserType | null;
+  changed: boolean;
 };
 
 export type UserType = {
