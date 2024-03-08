@@ -3,13 +3,14 @@ import HomePage from "./pages/HomePage";
 import Header from "./components/Header";
 import MyPage from "./pages/MyPage";
 import LoginPage from "./pages/LoginPage";
-import CalenderPage from "./pages/CalenderPage";
+
 import { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { fetchUsersData, sendUsersData } from "./store/userActions";
 import { getAuth, onAuthStateChanged } from "firebase/auth";
 import { replaceLoginUser } from "./store/userSlice";
 import { StateType } from "./types/user";
+import CalendarPage from "./pages/CalendarPage";
 
 function App() {
   const dispatch = useDispatch();
@@ -50,7 +51,7 @@ function App() {
           <Route path="/" element={<HomePage />} />
           <Route path="/mypage" element={<MyPage />} />
           <Route path="/login" element={<LoginPage />} />
-          <Route path="/calender" element={<CalenderPage />} />
+          <Route path="/calender" element={<CalendarPage />} />
           <Route path="*" element={<Navigate to="/" />} />
         </Routes>
       </div>
