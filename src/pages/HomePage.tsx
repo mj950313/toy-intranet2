@@ -1,11 +1,11 @@
 import { useSelector } from "react-redux";
-import { StateType } from "../types/user.ts";
 import { formatDate, formatTableDate } from "../util/date.ts";
 import TimeTable from "../components/TimeTable.tsx";
 import { useRef, useState } from "react";
 import PrevIcon from "../icons/PrevIcon.tsx";
 import NextIcon from "../icons/NextIcon.tsx";
 import CalendarIcon from "../icons/CalendarIcon.tsx";
+import { StateType } from "../types/user.ts";
 
 export default function HomePage() {
   const users = useSelector((state: StateType) => state.user.users);
