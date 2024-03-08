@@ -16,7 +16,6 @@ function App() {
   const auth = getAuth();
   const user = useSelector((state: StateType) => state.user);
   const users = user.users;
-  const loginUser = user.loginUser;
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -50,10 +49,7 @@ function App() {
         <Routes>
           <Route path="/" element={<HomePage />} />
           <Route path="/mypage" element={<MyPage />} />
-          <Route
-            path="/login"
-            element={loginUser ? <Navigate to="/" /> : <LoginPage />}
-          />
+          <Route path="/login" element={<LoginPage />} />
           <Route path="/calender" element={<CalenderPage />} />
           <Route path="*" element={<Navigate to="/" />} />
         </Routes>
