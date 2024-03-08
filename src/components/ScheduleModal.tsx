@@ -19,6 +19,10 @@ export default function ScheduleModal({
 }: PropsType) {
   const { schedules } = selectedSchedule;
 
+  const sortedSchedules = [...schedules].sort(
+    (a, b) => parseInt(a.time.split("-")[0]) - parseInt(b.time.split("-")[0])
+  );
+
   const [isAddForm, setIsAddForm] = useState(false);
 
   const toggleAddFormHandler = () => {
@@ -36,11 +40,11 @@ export default function ScheduleModal({
     >
       <div className="bg-white p-4 rounded-md flex flex-col gap-2">
         <p className="text-black">{formatDate(new Date(date))} 일정입니다.</p>
-        {schedules.length > 0 &&
-          schedules.map((schedule) => (
+        {sortedSchedules.length > 0 &&
+          sortedSchedules.map((schedule) => (
             <ScheduleItem key={schedule.id} schedule={schedule} date={date} />
           ))}
-        {schedules.length === 0 && (
+        {sortedSchedules.length === 0 && (
           <div className="text-black text-center">일정이 없습니다.</div>
         )}
         {!isAddForm && (
