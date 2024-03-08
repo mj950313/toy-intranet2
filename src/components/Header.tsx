@@ -7,8 +7,9 @@ export default function Header() {
   const auth = getAuth();
   const loginUser = useSelector((state: StateType) => state.user.loginUser);
 
-  const handleSignout = () => {
-    signOut(auth);
+  const handleSignout = async () => {
+    await signOut(auth);
+    localStorage.removeItem("token");
   };
 
   return (
@@ -19,7 +20,7 @@ export default function Header() {
         </Link>
         <nav className="flex gap-4 items-center">
           {loginUser && <Link to="/mypage">Mypage</Link>}
-          {loginUser && <Link to="/calender">Calender</Link>}
+          {loginUser && <Link to="/calendar">Calender</Link>}
           {!loginUser && <Link to="/login">Login</Link>}
           {loginUser && <button onClick={handleSignout}>Logout</button>}
         </nav>

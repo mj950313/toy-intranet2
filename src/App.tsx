@@ -51,7 +51,7 @@ function App() {
           <Route path="/" element={<HomePage />} />
           <Route path="/mypage" element={<MyPage />} />
           <Route path="/login" element={<LoginPage />} />
-          <Route path="/calender" element={<CalendarPage />} />
+          <Route path="/calendar" element={<CalendarPage />} />
           <Route path="*" element={<Navigate to="/" />} />
         </Routes>
       </div>
