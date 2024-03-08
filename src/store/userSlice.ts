@@ -73,11 +73,13 @@ export const counterSlice = createSlice({
         (s) => s.date === date
       );
 
-      const newSchedules = selectedScheduleByDate.schedules.filter(
-        (s) => s.id !== id
-      );
+      if (selectedScheduleByDate) {
+        const newSchedules = selectedScheduleByDate.schedules.filter(
+          (s) => s.id !== id
+        );
 
-      selectedScheduleByDate.schedules = newSchedules;
+        selectedScheduleByDate.schedules = newSchedules;
+      }
     },
   },
 });

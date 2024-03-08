@@ -3,20 +3,20 @@ import HomePage from "./pages/HomePage";
 import Header from "./components/Header";
 import MyPage from "./pages/MyPage";
 import LoginPage from "./pages/LoginPage";
-import CalendarPage from "./pages/CalendarPage";
+
 import { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { fetchUsersData, sendUsersData } from "./store/userActions";
 import { getAuth, onAuthStateChanged } from "firebase/auth";
 import { replaceLoginUser } from "./store/userSlice";
 import { StateType } from "./types/user";
+import CalendarPage from "./pages/CalendarPage";
 
 function App() {
   const dispatch = useDispatch();
   const auth = getAuth();
   const user = useSelector((state: StateType) => state.user);
   const users = user.users;
-  const loginUser = user.loginUser;
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -50,11 +50,8 @@ function App() {
         <Routes>
           <Route path="/" element={<HomePage />} />
           <Route path="/mypage" element={<MyPage />} />
-          <Route
-            path="/login"
-            element={loginUser ? <Navigate to="/" /> : <LoginPage />}
-          />
-          <Route path="/calender" element={<CalendarPage />} />
+          <Route path="/login" element={<LoginPage />} />
+          <Route path="/calendar" element={<CalendarPage />} />
           <Route path="*" element={<Navigate to="/" />} />
         </Routes>
       </div>
