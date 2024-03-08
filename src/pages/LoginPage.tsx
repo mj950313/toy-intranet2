@@ -1,14 +1,11 @@
 import { useForm, SubmitHandler } from "react-hook-form";
 import { login } from "../api/firebase";
-import { useNavigate } from "react-router-dom";
 import { useSelector } from "react-redux";
 import { StateType } from "../types/user";
-
 interface FormData {
   email: string;
   password: string;
 }
-
 const LoginPage = () => {
   const {
     register,
@@ -16,13 +13,9 @@ const LoginPage = () => {
     setError,
     formState: { errors },
   } = useForm<FormData>();
-
-  const navigate = useNavigate();
   const users = useSelector((state: StateType) => state.user.users);
-
   const onSubmit: SubmitHandler<FormData> = async (data) => {
     const user = users.find((user) => user.email === data.email);
-
     if (!user) {
       setError("email", {
         message: "등록되지 않은 이메일 주소입니다.",
@@ -30,7 +23,6 @@ const LoginPage = () => {
     }
     try {
       login(data.email, data.password);
-      navigate("/");
     } catch (err) {
       setError("password", {
         message: "비밀번호가 틀립니다.",
@@ -82,5 +74,4 @@ const LoginPage = () => {
     </div>
   );
 };
-
 export default LoginPage;

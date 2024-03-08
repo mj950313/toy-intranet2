@@ -39,6 +39,8 @@ export const login = async (email: string, password: string) => {
     await signInWithEmailAndPassword(auth, email, password);
 
     localStorage.setItem("token", data.idToken);
+
+    window.location.href = "/";
   } catch (error) {
     console.log(error);
   }
