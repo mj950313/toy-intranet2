@@ -1,4 +1,4 @@
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { getAuth, signOut } from "firebase/auth";
 import { useSelector } from "react-redux";
 import { StateType } from "../types/user";
@@ -6,8 +6,10 @@ import { StateType } from "../types/user";
 export default function Header() {
   const auth = getAuth();
   const loginUser = useSelector((state: StateType) => state.user.loginUser);
+  const navigate = useNavigate();
 
   const handleSignout = async () => {
+    navigate("/login");
     await signOut(auth);
     localStorage.removeItem("token");
   };
