@@ -21,22 +21,22 @@ const LoginPage = () => {
   const users = useSelector((state: StateType) => state.user.users);
 
   const onSubmit: SubmitHandler<FormData> = async (data) => {
-    if (!users.some((user) => user.email === data.email)) {
+    const user = users.find((user) => user.email === data.email);
+
+    if (!user) {
       setError("email", {
-        message: "존재하는 직원 이메일이 아닙니다.",
+        message: "등록되지 않은 이메일 주소입니다.",
       });
-    } else {
-      try {
-        await login(data.email, data.password);
-        navigate("/");
-      } catch (err) {
-        setError("password", {
-          message: "비밀번호를 잘못 입력했습니다.",
-        });
-      }
+    }
+    try {
+      login(data.email, data.password);
+      navigate("/");
+    } catch (err) {
+      setError("password", {
+        message: "비밀번호가 틀립니다.",
+      });
     }
   };
-
   return (
     <div className="flex justify-center items-center">
       <form

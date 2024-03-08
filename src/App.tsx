@@ -11,7 +11,6 @@ import { getAuth, onAuthStateChanged } from "firebase/auth";
 import { replaceLoginUser } from "./store/userSlice";
 import { StateType } from "./types/user";
 import CalendarPage from "./pages/CalendarPage";
-
 function App() {
   const dispatch = useDispatch();
   const auth = getAuth();
@@ -46,6 +45,12 @@ function App() {
   return (
     <>
       <Header />
+      <video autoPlay muted>
+        <source
+          src="../../original-76f7d773707c53ade31bb5baf52cac7d.mp4"
+          type="video/mp4"
+        />
+      </video>
       <div className="w-[1200px] mx-auto">
         <Routes>
           <Route path="/" element={<HomePage />} />
