@@ -13,16 +13,18 @@ const LoginPage = () => {
     setError,
     formState: { errors },
   } = useForm<FormData>();
+
   const users = useSelector((state: StateType) => state.user.users);
+
   const onSubmit: SubmitHandler<FormData> = async (data) => {
     const user = users.find((user) => user.email === data.email);
     if (!user) {
-      setError("email", {
+      return setError("email", {
         message: "등록되지 않은 이메일 주소입니다.",
       });
     }
     try {
-      login(data.email, data.password);
+      await login(data.email, data.password);
     } catch (err) {
       setError("password", {
         message: "비밀번호가 틀립니다.",

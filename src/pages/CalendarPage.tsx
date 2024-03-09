@@ -1,7 +1,7 @@
-import 'react-calendar/dist/Calendar.css';
-import { Calendar, momentLocalizer } from 'react-big-calendar';
-import moment from 'moment'
+import { Calendar, momentLocalizer } from "react-big-calendar";
+import moment from "moment";
 import "react-big-calendar/lib/css/react-big-calendar.css";
+
 import { useSelector } from 'react-redux';
 import { StateType } from '../types/user';
 
@@ -47,18 +47,21 @@ export default function CalendarPage () {
   //   title: "MRI Registration",
   // }]
 
+
   return (
     <div>
-        <div>
+      <div>
         <Calendar
           localizer={localizer}
           startAccessor="start"
           endAccessor="end"
+
           style={{ height: 500 }}
           views={["month", "week", "day"]}
           events={events}
+
         />
-        </div>
+      </div>
     </div>
   );
 }

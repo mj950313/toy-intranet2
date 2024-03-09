@@ -42,7 +42,7 @@ export const login = async (email: string, password: string) => {
 
     window.location.href = "/";
   } catch (error) {
-    console.log(error);
+    throw error;
   }
 };
 
