@@ -1,7 +1,7 @@
 import { useState } from "react";
-import { times } from "../util/date";
 import { UserType } from "../types/user";
 import ScheduleModal from "./ScheduleModal";
+import { times } from "../util/time";
 
 type PropsType = {
   users: UserType[];

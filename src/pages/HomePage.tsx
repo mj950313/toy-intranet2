@@ -6,6 +6,7 @@ import PrevIcon from "../icons/PrevIcon.tsx";
 import NextIcon from "../icons/NextIcon.tsx";
 import CalendarIcon from "../icons/CalendarIcon.tsx";
 import { StateType } from "../types/user.ts";
+import UsersSchedule from "../components/UsersSchedule.tsx";
 
 export default function HomePage() {
   const users = useSelector((state: StateType) => state.user.users);
@@ -25,7 +26,7 @@ export default function HomePage() {
     "border border-myorange w-[40px] h-[30px] hover:bg-myorange hover:text-myblack transition";
 
   return (
-    <section>
+    <section className="backdrop-blur-sm bg-white/20 p-4">
       <div className="flex gap-4 items-center mb-4">
         <div className="h-[30px]">
           <button
@@ -56,7 +57,8 @@ export default function HomePage() {
         </div>
         <p>{formatDate(new Date(datePicker))}</p>
       </div>
-      <TimeTable users={users} date={datePicker} />
+      <UsersSchedule users={users} date={datePicker} />
+      {/* <TimeTable users={users} date={datePicker} /> */}
     </section>
   );
 }

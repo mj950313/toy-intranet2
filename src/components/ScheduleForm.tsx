@@ -1,14 +1,16 @@
-import { FormEvent } from "react";
+import { FormEvent, useState } from "react";
 import { times } from "../util/date";
 import { ScheduleType } from "../types/user";
 import { useDispatch } from "react-redux";
 import { addSchedule, editSchedule } from "../store/userSlice";
 import uuid from "react-uuid";
+import { isValidTime } from "../util/time";
 
 type Props = {
   onAddClose?: () => void;
   onEditClose: () => void;
   date: string;
+  schedules: ScheduleType[];
   schedule?: ScheduleType;
 };
 
@@ -19,9 +21,20 @@ export default function ScheduleForm({
   onAddClose = emptyFn,
   onEditClose,
   date,
+  schedules,
   schedule = emptySchedule,
 }: Props) {
   const { id, time, title, description } = schedule;
+
+  const [error, setError] = useState("");
+
+  const existingTimes = schedules.map((schedule) => schedule.time);
+
+  const existingTimesWithoutCurrentTime = existingTimes.filter(
+    (t) => t !== time
+  );
+
+  const Times = id ? existingTimesWithoutCurrentTime : existingTimes;
 
   const [startTime, endTime] = time.split("-");
 
@@ -37,6 +50,16 @@ export default function ScheduleForm({
     const endTime = (data["end-time"] as string).padStart(2, "0");
     data.time = `${startTime}-${endTime}`;
     data.date = date;
+
+    if (+startTime >= +endTime) {
+      setError("시작시간이 종료시간보다 크거나 같을 수 없습니다.");
+      return;
+    }
+
+    if (!isValidTime(Times, data.time)) {
+      setError("겹치는 시간이 있습니다 !");
+      return;
+    }
 
     if (id) {
       data.id = id;
@@ -84,6 +107,7 @@ export default function ScheduleForm({
           className="pl-1 rounded-sm text-black"
           defaultValue={title || ""}
           name="title"
+          required
         />
       </div>
       <div>
@@ -92,6 +116,7 @@ export default function ScheduleForm({
           className="pl-1 rounded-sm text-black"
           defaultValue={description || ""}
           name="description"
+          required
         />
       </div>
       <div className="flex justify-center gap-4">
@@ -110,6 +135,7 @@ export default function ScheduleForm({
         </button>
         <button className="bg-white text-myorange px-2 rounded-sm">확인</button>
       </div>
+      {error && <p className="text-center">{error}</p>}
     </form>
   );
 }
