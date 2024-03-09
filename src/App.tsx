@@ -11,6 +11,8 @@ import { replaceLoginUser } from "./store/userSlice";
 import { StateType } from "./types/user";
 import CalendarPage from "./pages/CalendarPage";
 import RootLayout from "./pages/RootLayout";
+import { checkAuthLoader, protectLoginPageLoader } from "./util/auth";
+import { logoutAction } from "./pages/Logout";
 
 function App() {
   const dispatch = useDispatch();
@@ -23,10 +25,22 @@ function App() {
       path: "/",
       element: <RootLayout />,
       children: [
-        { index: true, element: <HomePage /> },
-        { path: "mypage", element: <MyPage /> },
-        { path: "login", element: <LoginPage /> },
-        { path: "calendar", element: <CalendarPage /> },
+        { index: true, element: <HomePage />, loader: checkAuthLoader },
+        { path: "mypage", element: <MyPage />, loader: checkAuthLoader },
+        {
+          path: "login",
+          element: <LoginPage />,
+          loader: protectLoginPageLoader,
+        },
+        {
+          path: "calendar",
+          element: <CalendarPage />,
+          loader: checkAuthLoader,
+        },
+        {
+          path: "/logout",
+          action: logoutAction,
+        },
       ],
     },
   ]);
@@ -45,9 +59,9 @@ function App() {
     const unsubscribe = onAuthStateChanged(auth, (user) => {
       if (user) {
         const loginUser = users.find((u) => u.email === user.email);
-        dispatch(replaceLoginUser(loginUser));
+        dispatch(replaceLoginUser({ loginUser, isLogin: true }));
       } else {
-        dispatch(replaceLoginUser(null));
+        dispatch(replaceLoginUser({ loginUser: null, isLogin: false }));
       }
     });
 
