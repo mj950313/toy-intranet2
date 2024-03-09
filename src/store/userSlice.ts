@@ -2,6 +2,7 @@ import { createSlice } from "@reduxjs/toolkit";
 import uuid from "react-uuid";
 import { UserType } from "../types/user";
 import { ReducerStateType } from "../types/user";
+import { getAuthToken } from "../util/auth";
 
 export const counterSlice = createSlice({
   name: "user",
@@ -9,13 +10,15 @@ export const counterSlice = createSlice({
     users: [],
     loginUser: null,
     changed: false,
+    isLogin: !!getAuthToken(),
   },
   reducers: {
     replaceUsers(state, action) {
       state.users = action.payload;
     },
     replaceLoginUser(state, action) {
-      state.loginUser = action.payload;
+      state.loginUser = action.payload.loginUser;
+      state.isLogin = action.payload.isLogin;
     },
     addSchedule(state: ReducerStateType, action) {
       state.changed = true;
@@ -58,7 +61,7 @@ export const counterSlice = createSlice({
         (s) => s.id === id
       );
 
-      Object.assign(selectedSchedule, newSchedule);
+      Object.assign({ ...selectedSchedule }, newSchedule);
     },
     deleteSchedule(state: ReducerStateType, action) {
       state.changed = true;
