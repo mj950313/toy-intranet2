@@ -1,6 +1,5 @@
 import { useSelector } from "react-redux";
 import { formatDate, formatTableDate } from "../util/date.ts";
-import TimeTable from "../components/TimeTable.tsx";
 import { useRef, useState } from "react";
 import PrevIcon from "../icons/PrevIcon.tsx";
 import NextIcon from "../icons/NextIcon.tsx";
@@ -26,7 +25,7 @@ export default function HomePage() {
     "border border-myorange w-[40px] h-[30px] hover:bg-myorange hover:text-myblack transition";
 
   return (
-    <section className="backdrop-blur-sm bg-white/20 p-4">
+    <section className="backdrop-blur-sm bg-white/10 p-4 rounded-md">
       <div className="flex gap-4 items-center mb-4">
         <div className="h-[30px]">
           <button
@@ -58,7 +57,6 @@ export default function HomePage() {
         <p>{formatDate(new Date(datePicker))}</p>
       </div>
       <UsersSchedule users={users} date={datePicker} />
-      {/* <TimeTable users={users} date={datePicker} /> */}
     </section>
   );
 }

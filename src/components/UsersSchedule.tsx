@@ -1,5 +1,7 @@
+import { useState } from "react";
 import { UserType } from "../types/user";
 import { times } from "../util/time";
+import ScheduleModal from "./ScheduleModal";
 
 type PropsType = {
   users: UserType[];
@@ -7,63 +9,75 @@ type PropsType = {
 };
 
 export default function UsersSchedule({ users, date }: PropsType) {
-  console.log(users);
-  console.log(date);
+  const [isOpen, setIsOpen] = useState(false);
+  const [userId, setUserId] = useState("");
+
+  const selectedSchedule = users
+    .find((user) => user.id === userId)
+    ?.schedulesByDate.find((schedule) => schedule.date === date);
 
   return (
-    <section>
-      <div className="bg-blue-300 grid grid-cols-4 gap-4">
-        {users.map((user) => (
-          <div key={user.id}>
-            <p className="text-center">{user.name}</p>
-            <div className="w-full h-[400px] bg-white p-4 overflow-y-scroll">
-              {times.map((time) => (
-                <p className="h-6">{time}</p>
-              ))}
-              {users.map((user, index) => {
-                const currentSchedule = user.schedulesByDate.find(
-                  (s) => s.date === date
-                );
+    <>
+      <section>
+        <div className="bg-white/10 rounded-md p-4 grid grid-cols-4 gap-4">
+          {users.map((user) => {
+            const currentSchedule = user.schedulesByDate.find(
+              (s) => s.date === date
+            );
 
-                const scheduleTime = currentSchedule?.schedules.map(
-                  (s) => s.time
-                );
+            const timeRange = currentSchedule?.schedules.map((s) => {
+              const [start, end] = s.time.split("-").map(Number);
+              const title = s.title;
+              return { start, end, title };
+            });
 
-                const timeRange = scheduleTime?.map((t) => {
-                  const [start, end] = t.split("-").map(Number);
-                  return { start, end };
-                });
+            return (
+              <div key={user.id}>
+                <div
+                  onClick={() => {
+                    setUserId(user.id);
+                    setIsOpen(true);
+                  }}
+                  className="bg-white/10 rounded-md p-4 hover:bg-white/20 transition cursor-pointer"
+                >
+                  <p className="text-center">{user.name}</p>
+                  <div className="w-full h-[344px] overflow-y-scroll relative">
+                    {times.map((time) => (
+                      <div key={time} className="flex">
+                        <p className="h-6 basis-1/6">{time}</p>
+                        <p className="basis-5/6 border-t border-myorange translate-y-3"></p>
+                      </div>
+                    ))}
+                    {timeRange?.map((t) => {
+                      const startingHeight = 12 + t.start * 24;
+                      const height = (t.end - t.start) * 24;
 
-                return (
-                  <div
-                    key={user.id}
-                    className={`flex border ${
-                      index !== users.length - 1 && "border-b-0"
-                    }`}
-                  >
-                    <div className="flex w-full">
-                      {times.map((time, index) => {
-                        const isInTimeRange = timeRange?.some(
-                          (range) => index >= range.start && index < range.end
-                        );
-
-                        return (
-                          <div
-                            key={time}
-                            className={`border-r flex-1 ${
-                              isInTimeRange && "bg-myorange"
-                            } ${index === times.length - 1 && "border-r-0"}`}
-                          ></div>
-                        );
-                      })}
-                    </div>
+                      return (
+                        <div
+                          key={t.start}
+                          style={{ height: height, top: startingHeight }}
+                          className="w-[160px] bg-myorange/60 absolute right-[20px] rounded-md text-white flex justify-center items-center"
+                        >
+                          {t.title}
+                        </div>
+                      );
+                    })}
                   </div>
-                );
-              })}
-            </div>
-          </div>
-        ))}
-      </div>
-    </section>
+                </div>
+              </div>
+            );
+          })}
+        </div>
+      </section>
+      {isOpen && (
+        <ScheduleModal
+          selectedSchedule={
+            selectedSchedule || { id: "", date: "", schedules: [] }
+          }
+          date={date}
+          onClose={() => setIsOpen(false)}
+        />
+      )}
+    </>
   );
 }

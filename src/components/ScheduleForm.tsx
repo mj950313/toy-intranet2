@@ -1,10 +1,9 @@
 import { FormEvent, useState } from "react";
-import { times } from "../util/date";
 import { ScheduleType } from "../types/user";
 import { useDispatch } from "react-redux";
 import { addSchedule, editSchedule } from "../store/userSlice";
 import uuid from "react-uuid";
-import { isValidTime } from "../util/time";
+import { isValidTime, times } from "../util/time";
 
 type Props = {
   onAddClose?: () => void;
