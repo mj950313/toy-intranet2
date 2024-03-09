@@ -29,7 +29,7 @@ export const login = async (email: string, password: string) => {
 
     localStorage.setItem("token", result.user.accessToken);
   } catch (error) {
-    console.log(error);
+    throw error;
   }
 };
 
