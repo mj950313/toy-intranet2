@@ -4,12 +4,13 @@ import "react-big-calendar/lib/css/react-big-calendar.css";
 
 import { useSelector } from "react-redux";
 import { StateType } from "../types/user";
+// import { useState } from "react";
 
 const localizer = momentLocalizer(moment);
 
 export default function CalendarPage() {
   const loginUser = useSelector((state: StateType) => state.user.loginUser);
-
+  
   // 각 이벤트에 고유한 색상을 할당하기 위한 함수
   const eventStyleGetter = (event: { id: string }) => {
     const colors = ["#0088FF", "#FF5733", "#FFC300", "#83E690", "#FF00FF"]; // 사용할 색상 배열
@@ -29,11 +30,14 @@ export default function CalendarPage() {
     };
   };
 
+  //로그인한 유저의 데이터를 가공해서 전달
   const events = loginUser
     ? loginUser.schedulesByDate.flatMap((schedule) =>
         schedule.schedules.map((item) => ({
           id: item.id,
-          title: item.title,
+          title: `${item.title} (${moment(item.time.split("-")[0], "HH").format(
+            "HH"
+          )} - ${moment(item.time.split("-")[1], "HH").format("HH")})`,
           start: moment(
             `${schedule.date} ${item.time.split("-")[0]}`,
             "YYYY-MM-DD HH:mm"
@@ -46,6 +50,7 @@ export default function CalendarPage() {
         }))
       )
     : [];
+
 
   return (
     <div>
@@ -83,9 +88,11 @@ export default function CalendarPage() {
         titleAccessor="title"
         tooltipAccessor="description"
         eventPropGetter={eventStyleGetter} // 이벤트 스타일을 설정하는 함수 전달
-        style={{ height: 500 }}
-        views={["month", "week", "day"]}
+        style={{ height: 900 }}
+        views={["month", "week"]}
         events={events}
+        selectable
+        onSelectSlot={(slotInfo) => console.log(slotInfo)}
       />
     </div>
   );
