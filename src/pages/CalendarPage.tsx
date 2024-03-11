@@ -10,16 +10,7 @@ const localizer = momentLocalizer(moment);
 
 export default function CalendarPage() {
   const loginUser = useSelector((state: StateType) => state.user.loginUser);
-
-  // const [selectedDates, setSelectedDates] = useState([]);
-
-  // const handleSelect = (schedule: object ) => {
-  //   // event 객체를 통해 선택된 날짜를 가져올 수 있음
-  //   const selectedDate = schedule.item;
-  //   // 선택된 날짜를 배열에 추가
-  //   setSelectedDates([...selectedDates, selectedDate]);
-  // };
-
+  
   // 각 이벤트에 고유한 색상을 할당하기 위한 함수
   const eventStyleGetter = (event: { id: string }) => {
     const colors = ["#0088FF", "#FF5733", "#FFC300", "#83E690", "#FF00FF"]; // 사용할 색상 배열
@@ -60,7 +51,6 @@ export default function CalendarPage() {
       )
     : [];
 
-  // console.log(loginUser?.schedulesByDate);
 
   return (
     <div>
@@ -101,8 +91,8 @@ export default function CalendarPage() {
         style={{ height: 900 }}
         views={["month", "week"]}
         events={events}
-        // onSelectSlot={newEvent}
-        // selected={selectedDate}
+        selectable
+        onSelectSlot={(slotInfo) => console.log(slotInfo)}
       />
     </div>
   );
