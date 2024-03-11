@@ -4,13 +4,22 @@ import "react-big-calendar/lib/css/react-big-calendar.css";
 
 import { useSelector } from "react-redux";
 import { StateType } from "../types/user";
-// import { useState } from "react";
+import ScheduleModal from "../components/ScheduleModal";
+import { useState } from "react";
+import { formatTableDate } from "../util/date";
 
 const localizer = momentLocalizer(moment);
 
 export default function CalendarPage() {
   const loginUser = useSelector((state: StateType) => state.user.loginUser);
-  
+
+  const [isOpen, setIsOpen] = useState(false);
+  const [date, setDate] = useState("");
+
+  const selectedSchedule = loginUser?.schedulesByDate.find(
+    (schedule) => schedule.date === date
+  );
+
   // 각 이벤트에 고유한 색상을 할당하기 위한 함수
   const eventStyleGetter = (event: { id: string }) => {
     const colors = ["#0088FF", "#FF5733", "#FFC300", "#83E690", "#FF00FF"]; // 사용할 색상 배열
@@ -51,11 +60,11 @@ export default function CalendarPage() {
       )
     : [];
 
-
   return (
-    <div>
-      <style>
-        {`
+    <>
+      <div>
+        <style>
+          {`
           .rbc-btn-group {
             background-color: #f46804;
             border-radius: 5px;
@@ -80,20 +89,33 @@ export default function CalendarPage() {
             background-color: #8c4100;
           }
         `}
-      </style>
-      <Calendar
-        localizer={localizer}
-        startAccessor="start"
-        endAccessor="end"
-        titleAccessor="title"
-        tooltipAccessor="description"
-        eventPropGetter={eventStyleGetter} // 이벤트 스타일을 설정하는 함수 전달
-        style={{ height: 900 }}
-        views={["month", "week"]}
-        events={events}
-        selectable
-        onSelectSlot={(slotInfo) => console.log(slotInfo)}
-      />
-    </div>
+        </style>
+        <Calendar
+          localizer={localizer}
+          startAccessor="start"
+          endAccessor="end"
+          titleAccessor="title"
+          tooltipAccessor="description"
+          eventPropGetter={eventStyleGetter} // 이벤트 스타일을 설정하는 함수 전달
+          style={{ height: 900 }}
+          views={["month", "week"]}
+          events={events}
+          selectable
+          onSelectSlot={(slotInfo) => {
+            setDate(formatTableDate(slotInfo.slots[0]));
+            setIsOpen(true);
+          }}
+        />
+      </div>
+      {isOpen && (
+        <ScheduleModal
+          selectedSchedule={
+            selectedSchedule || { id: "", date: "", schedules: [] }
+          }
+          date={date}
+          onClose={() => setIsOpen(false)}
+        />
+      )}
+    </>
   );
 }
