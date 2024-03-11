@@ -1,11 +1,17 @@
-import React, { useState } from 'react';
-import { UserType, SchedulesByDateType, ScheduleType, StateType } from '../types/user';
-import { useSelector } from 'react-redux';
-import { FaCalendarAlt } from "react-icons/fa";
-import CountUp from 'react-countup'; 
+import React, { useState } from "react";
+import {
+  UserType,
+  SchedulesByDateType,
+  ScheduleType,
+  StateType,
+} from "../types/user";
+import { useSelector } from "react-redux";
+import CountUp from 'react-countup';
 
 const MyPage: React.FC = () => {
-  const loginUser: UserType | null = useSelector((state: StateType) => state.user.loginUser);
+  const loginUser: UserType | null = useSelector(
+    (state: StateType) => state.user.loginUser
+  );
   const [showCorrectionForm, setShowCorrectionForm] = useState<boolean>(false);
   const [correctionReason, setCorrectionReason] = useState<string>('');
 
@@ -15,7 +21,9 @@ const MyPage: React.FC = () => {
   };
 
   // 정정 신청 사유를 변경합니다.
-  const handleCorrectionReasonChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+  const handleCorrectionReasonChange = (
+    event: React.ChangeEvent<HTMLInputElement>
+  ) => {
     setCorrectionReason(event.target.value);
   };
 
@@ -29,20 +37,28 @@ const MyPage: React.FC = () => {
   // 각 스케줄의 시간을 기반으로 총 일한 시간을 계산합니다.
   const calculateWorkedHours = (schedules: ScheduleType[]): number => {
     let totalHours = 0;
-    schedules.forEach(schedule => {
-      const [startHour, endHour] = schedule.time.split('-').map(time => parseInt(time));
+    schedules.forEach((schedule) => {
+      const [startHour, endHour] = schedule.time
+        .split("-")
+        .map((time) => parseInt(time));
       totalHours += endHour - startHour; // 시작 시간과 종료 시간의 차이를 더합니다.
     });
     return totalHours;
   };
 
   // 월별로 필터링된 스케줄 데이터를 반환합니다.
-  const filterSchedulesByMonth = (schedules: SchedulesByDateType[], month: number): ScheduleType[] => {
+  const filterSchedulesByMonth = (
+    schedules: SchedulesByDateType[],
+    month: number
+  ): ScheduleType[] => {
     const filteredSchedules: ScheduleType[] = [];
-    schedules.forEach(scheduleByDate => {
-      const [year, monthStr] = scheduleByDate.date.split('-');
+    schedules.forEach((scheduleByDate) => {
+      const [year, monthStr] = scheduleByDate.date.split("-");
       const scheduleMonth = parseInt(monthStr);
-      if (parseInt(year) === new Date().getFullYear() && scheduleMonth === month) {
+      if (
+        parseInt(year) === new Date().getFullYear() &&
+        scheduleMonth === month
+      ) {
         // 선택한 년도와 월에 해당하는 스케줄 데이터를 필터링합니다.
         filteredSchedules.push(...scheduleByDate.schedules);
       }
@@ -55,11 +71,6 @@ const MyPage: React.FC = () => {
     const workedHours = calculateWorkedHours(schedules);
     const monthSalary = user.salary * workedHours;
     return monthSalary;
-  };
-
-  // 캘린더 아이콘 컴포넌트
-  const CalendarIcon: React.FC<React.SVGProps<SVGSVGElement>> = (props) => {
-    return <FaCalendarAlt {...props} />;
   };
 
   // 오늘 날짜에 해당하는 스케줄만 필터링합니다.
@@ -86,7 +97,9 @@ const MyPage: React.FC = () => {
       {/* 로그인 사용자 정보 표시 */}
       {loginUser && (
         <div className="bg-gray-100 p-4 rounded mb-4">
-          <h2 className="text-xl font-semibold mb-2">Welcome, {loginUser.name}</h2>
+          <h2 className="text-xl font-semibold mb-2">
+            Welcome, {loginUser.name}
+          </h2>
           <p className="text-gray-600">Email: {loginUser.email}</p>
         </div>
       )}
@@ -110,7 +123,10 @@ const MyPage: React.FC = () => {
       )}
 
         {/* 급여 정정 신청 토글 */}
-        <button onClick={toggleCorrectionForm} className="bg-myorange text-white font-semibold px-4 py-2 rounded">
+        <button
+          onClick={toggleCorrectionForm}
+          className="bg-myorange text-white font-semibold px-4 py-2 rounded"
+        >
           급여 정정 신청
         </button>
         {/* 정정 신청 폼 */}
@@ -123,7 +139,12 @@ const MyPage: React.FC = () => {
               value={correctionReason}
               onChange={handleCorrectionReasonChange}
             />
-            <button type="submit" className="bg-myorange text-white font-semibold px-4 py-2 mt-2 rounded">Submit</button>
+            <button
+              type="submit"
+              className="bg-myorange text-white font-semibold px-4 py-2 mt-2 rounded"
+            >
+              Submit
+            </button>
           </form>
         )}
       </div>
@@ -132,7 +153,6 @@ const MyPage: React.FC = () => {
       <div className="bg-white shadow-md rounded mb-4 p-4 ">
         <h2 className="text-xl font-semibold mb-2">Today's Schedule</h2>
         {/* 오늘의 스케줄 정보 표시 */}
-        <CalendarIcon className="cursor-pointer" />
         <div className='flex items-center justify-center'>
         <div className="border border-gray-300 rounded p-4 h-[500px] w-[500px] flex items-center justify-center">
           {todaySchedules.length === 0 ? (
