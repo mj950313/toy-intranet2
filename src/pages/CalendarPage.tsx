@@ -1,7 +1,7 @@
-import 'react-calendar/dist/Calendar.css';
-import { Calendar, momentLocalizer } from 'react-big-calendar';
-import moment from 'moment'
+import { Calendar, momentLocalizer } from "react-big-calendar";
+import moment from "moment";
 import "react-big-calendar/lib/css/react-big-calendar.css";
+
 import { useSelector } from 'react-redux';
 import { StateType } from '../types/user';
 
@@ -39,6 +39,7 @@ export default function CalendarPage() {
       description: item.description
     }))
   )) : [];
+
 
   return (
     <div>

@@ -1,8 +1,10 @@
 import { initializeApp } from "firebase/app";
 import {
   User,
+  browserSessionPersistence,
   getAuth,
   onAuthStateChanged,
+  setPersistence,
   signInWithEmailAndPassword,
 } from "firebase/auth";
 
@@ -13,7 +15,7 @@ const firebaseConfig = {
   projectId: import.meta.env.VITE_PROJECT_ID,
 };
 
-const app = initializeApp(firebaseConfig);
+export const app = initializeApp(firebaseConfig);
 const auth = getAuth(app);
 
 // export const login = async (email: string, password: string) => {
@@ -22,27 +24,12 @@ const auth = getAuth(app);
 
 export const login = async (email: string, password: string) => {
   try {
-    const response = await fetch(
-      `https://identitytoolkit.googleapis.com/v1/accounts:signInWithPassword?key=${firebaseConfig.apiKey}`,
-      {
-        method: "POST",
-        body: JSON.stringify({ email, password, returnSecureToken: true }),
-        headers: { "Content-Type": "application/json" },
-      }
-    );
-    const data = await response.json();
+    await setPersistence(auth, browserSessionPersistence);
+    const result = await signInWithEmailAndPassword(auth, email, password);
 
-    if (data.error && data.error.message) {
-      throw new Error(data.error.message);
-    }
-
-    await signInWithEmailAndPassword(auth, email, password);
-
-    localStorage.setItem("token", data.idToken);
-
-    window.location.href = "/";
+    localStorage.setItem("token", result.user.accessToken);
   } catch (error) {
-    console.log(error);
+    throw error;
   }
 };
 

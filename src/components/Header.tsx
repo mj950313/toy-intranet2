@@ -1,18 +1,9 @@
-import { Link, useNavigate } from "react-router-dom";
-import { getAuth, signOut } from "firebase/auth";
+import { Form, Link } from "react-router-dom";
 import { useSelector } from "react-redux";
 import { StateType } from "../types/user";
 
 export default function Header() {
-  const auth = getAuth();
-  const loginUser = useSelector((state: StateType) => state.user.loginUser);
-  const navigate = useNavigate();
-
-  const handleSignout = async () => {
-    navigate("/login");
-    await signOut(auth);
-    localStorage.removeItem("token");
-  };
+  const isLogin = useSelector((state: StateType) => state.user.isLogin);
 
   return (
     <header className="bg-mygray sticky top-0 mb-16 text-myorange">
@@ -21,10 +12,14 @@ export default function Header() {
           TOY FIVE
         </Link>
         <nav className="flex gap-4 items-center">
-          {loginUser && <Link to="/mypage">Mypage</Link>}
-          {loginUser && <Link to="/calendar">Calender</Link>}
-          {!loginUser && <Link to="/login">Login</Link>}
-          {loginUser && <button onClick={handleSignout}>Logout</button>}
+          {isLogin && <Link to="/mypage">Mypage</Link>}
+          {isLogin && <Link to="/calendar">Calender</Link>}
+          {!isLogin && <Link to="/login">Login</Link>}
+          {isLogin && (
+            <Form action="/logout" method="post">
+              <button>Logout</button>
+            </Form>
+          )}
         </nav>
       </div>
     </header>

@@ -2,10 +2,12 @@ import { useForm, SubmitHandler } from "react-hook-form";
 import { login } from "../api/firebase";
 import { useSelector } from "react-redux";
 import { StateType } from "../types/user";
+
 interface FormData {
   email: string;
   password: string;
 }
+
 const LoginPage = () => {
   const {
     register,
@@ -13,27 +15,31 @@ const LoginPage = () => {
     setError,
     formState: { errors },
   } = useForm<FormData>();
+
   const users = useSelector((state: StateType) => state.user.users);
+
   const onSubmit: SubmitHandler<FormData> = async (data) => {
     const user = users.find((user) => user.email === data.email);
     if (!user) {
-      setError("email", {
+      return setError("email", {
         message: "등록되지 않은 이메일 주소입니다.",
       });
     }
     try {
-      login(data.email, data.password);
+      await login(data.email, data.password);
     } catch (err) {
       setError("password", {
         message: "비밀번호가 틀립니다.",
       });
     }
   };
+
   return (
     <div className="flex justify-center items-center">
       <form
         className="w-[400px] rounded-lg p-4 bg-white/10 flex flex-col gap-4"
         onSubmit={handleSubmit(onSubmit)}
+        method="post"
       >
         <label htmlFor="email" className="text-white flex flex-col">
           이메일
@@ -67,9 +73,7 @@ const LoginPage = () => {
             <p className="text-red-500">{errors.password.message}</p>
           )}
         </label>
-        <button className="text-white" type="submit">
-          로그인
-        </button>
+        <button className="text-white">로그인</button>
       </form>
     </div>
   );

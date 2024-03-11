@@ -3,6 +3,7 @@ export type StateType = {
     users: UserType[];
     loginUser: UserType | null;
     changed: boolean;
+    isLogin: boolean;
   };
 };
 
