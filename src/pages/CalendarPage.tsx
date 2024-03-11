@@ -4,11 +4,21 @@ import "react-big-calendar/lib/css/react-big-calendar.css";
 
 import { useSelector } from "react-redux";
 import { StateType } from "../types/user";
+import ScheduleModal from "../components/ScheduleModal";
+import { useState } from "react";
+import { formatTableDate } from "../util/date";
 
 const localizer = momentLocalizer(moment);
 
 export default function CalendarPage() {
   const loginUser = useSelector((state: StateType) => state.user.loginUser);
+
+  const [isOpen, setIsOpen] = useState(false);
+  const [date, setDate] = useState("");
+
+  const selectedSchedule = loginUser?.schedulesByDate.find(
+    (schedule) => schedule.date === date
+  );
 
   // 각 이벤트에 고유한 색상을 할당하기 위한 함수
   const eventStyleGetter = (event: { id: string }) => {
@@ -29,11 +39,14 @@ export default function CalendarPage() {
     };
   };
 
+  //로그인한 유저의 데이터를 가공해서 전달
   const events = loginUser
     ? loginUser.schedulesByDate.flatMap((schedule) =>
         schedule.schedules.map((item) => ({
           id: item.id,
-          title: item.title,
+          title: `${item.title} (${moment(item.time.split("-")[0], "HH").format(
+            "HH"
+          )} - ${moment(item.time.split("-")[1], "HH").format("HH")})`,
           start: moment(
             `${schedule.date} ${item.time.split("-")[0]}`,
             "YYYY-MM-DD HH:mm"
@@ -48,9 +61,10 @@ export default function CalendarPage() {
     : [];
 
   return (
-    <div>
-      <style>
-        {`
+    <>
+      <div>
+        <style>
+          {`
           .rbc-btn-group {
             background-color: #f46804;
             border-radius: 5px;
@@ -75,18 +89,33 @@ export default function CalendarPage() {
             background-color: #8c4100;
           }
         `}
-      </style>
-      <Calendar
-        localizer={localizer}
-        startAccessor="start"
-        endAccessor="end"
-        titleAccessor="title"
-        tooltipAccessor="description"
-        eventPropGetter={eventStyleGetter} // 이벤트 스타일을 설정하는 함수 전달
-        style={{ height: 500 }}
-        views={["month", "week", "day"]}
-        events={events}
-      />
-    </div>
+        </style>
+        <Calendar
+          localizer={localizer}
+          startAccessor="start"
+          endAccessor="end"
+          titleAccessor="title"
+          tooltipAccessor="description"
+          eventPropGetter={eventStyleGetter} // 이벤트 스타일을 설정하는 함수 전달
+          style={{ height: 900 }}
+          views={["month", "week"]}
+          events={events}
+          selectable
+          onSelectSlot={(slotInfo) => {
+            setDate(formatTableDate(slotInfo.slots[0]));
+            setIsOpen(true);
+          }}
+        />
+      </div>
+      {isOpen && (
+        <ScheduleModal
+          selectedSchedule={
+            selectedSchedule || { id: "", date: "", schedules: [] }
+          }
+          date={date}
+          onClose={() => setIsOpen(false)}
+        />
+      )}
+    </>
   );
 }

@@ -16,7 +16,7 @@ export const fetchUsersData = () => {
       const usersData = await fetchData();
       dispatch(replaceUsers(usersData));
     } catch (error) {
-      // ...
+      console.log(error);
     }
   };
 };
@@ -40,7 +40,7 @@ export const sendUsersData = (users: UserType[]) => {
     try {
       await sendRequest();
     } catch (error) {
-      // ...
+      console.log(error);
     }
   };
 };
