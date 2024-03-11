@@ -41,7 +41,7 @@ export default function UsersSchedule({ users, date }: PropsType) {
                   className="bg-white/10 rounded-md p-4 hover:bg-white/20 transition cursor-pointer"
                 >
                   <p className="text-center">{user.name}</p>
-                  <div className="w-full h-[344px] overflow-y-scroll relative">
+                  <div className="w-full h-[344px] overflow-y-scroll scrollbar-hide relative">
                     {times.map((time) => (
                       <div key={time} className="flex">
                         <p className="h-6 basis-1/6">{time}</p>
