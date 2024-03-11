@@ -6,7 +6,7 @@ export default function Header() {
   const isLogin = useSelector((state: StateType) => state.user.isLogin);
 
   return (
-    <header className="bg-mygray sticky top-0 mb-16 text-myorange">
+    <header className="backdrop-blur-sm sticky top-0 text-myorange z-20">
       <div className="flex justify-between w-[1200px] mx-auto py-4">
         <Link to="/" className="font-bold text-2xl">
           TOY FIVE
