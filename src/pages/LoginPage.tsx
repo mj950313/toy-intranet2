@@ -2,6 +2,9 @@ import { useForm, SubmitHandler } from "react-hook-form";
 import { login } from "../api/firebase";
 import { useSelector } from "react-redux";
 import { StateType } from "../types/user";
+import { useNavigate } from "react-router";
+import { useEffect, useState } from "react";
+import { BeatLoader } from "react-spinners";
 
 interface FormData {
   email: string;
@@ -17,6 +20,13 @@ const LoginPage = () => {
   } = useForm<FormData>();
 
   const users = useSelector((state: StateType) => state.user.users);
+  const navigate = useNavigate();
+
+  const [isLoading, setIsLoading] = useState(false);
+
+  useEffect(() => {
+    navigate("/");
+  }, [navigate]);
 
   const onSubmit: SubmitHandler<FormData> = async (data) => {
     const user = users.find((user) => user.email === data.email);
@@ -26,7 +36,7 @@ const LoginPage = () => {
       });
     }
     try {
-      await login(data.email, data.password);
+      login(data.email, data.password, setIsLoading);
     } catch (err) {
       setError("password", {
         message: "비밀번호가 틀립니다.",
@@ -73,7 +83,8 @@ const LoginPage = () => {
             <p className="text-red-500">{errors.password.message}</p>
           )}
         </label>
-        <button className="text-white">로그인</button>
+        {!isLoading && <button className="text-white">로그인</button>}
+        {isLoading && <BeatLoader className="mx-auto" color="white" />}
       </form>
     </div>
   );

@@ -38,7 +38,7 @@ function App() {
           loader: checkAuthLoader,
         },
         {
-          path: "/logout",
+          path: "logout",
           action: logoutAction,
         },
       ],
