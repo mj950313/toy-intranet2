@@ -42,7 +42,12 @@ export default function ScheduleModal({
         <p className="text-black">{formatDate(new Date(date))} 일정입니다.</p>
         {sortedSchedules.length > 0 &&
           sortedSchedules.map((schedule) => (
-            <ScheduleItem key={schedule.id} schedule={schedule} date={date} />
+            <ScheduleItem
+              key={schedule.id}
+              schedule={schedule}
+              date={date}
+              schedules={schedules}
+            />
           ))}
         {sortedSchedules.length === 0 && (
           <div className="text-black text-center">일정이 없습니다.</div>
@@ -58,6 +63,7 @@ export default function ScheduleModal({
             onAddClose={toggleAddFormHandler}
             onEditClose={toggleAddFormHandler}
             date={date}
+            schedules={schedules}
           />
         )}
       </div>
