@@ -1,6 +1,5 @@
 import { useForm, SubmitHandler } from "react-hook-form";
 import { login } from "../api/firebase";
-import { useNavigate } from "react-router-dom";
 import { useSelector } from "react-redux";
 import { StateType } from "../types/user";
 
@@ -17,23 +16,21 @@ const LoginPage = () => {
     formState: { errors },
   } = useForm<FormData>();
 
-  const navigate = useNavigate();
   const users = useSelector((state: StateType) => state.user.users);
 
   const onSubmit: SubmitHandler<FormData> = async (data) => {
-    if (!users.some((user) => user.email === data.email)) {
-      setError("email", {
-        message: "존재하는 직원 이메일이 아닙니다.",
+    const user = users.find((user) => user.email === data.email);
+    if (!user) {
+      return setError("email", {
+        message: "등록되지 않은 이메일 주소입니다.",
       });
-    } else {
-      try {
-        await login(data.email, data.password);
-        navigate("/");
-      } catch (err) {
-        setError("password", {
-          message: "비밀번호를 잘못 입력했습니다.",
-        });
-      }
+    }
+    try {
+      await login(data.email, data.password);
+    } catch (err) {
+      setError("password", {
+        message: "비밀번호가 틀립니다.",
+      });
     }
   };
 
@@ -42,6 +39,7 @@ const LoginPage = () => {
       <form
         className="w-[400px] rounded-lg p-4 bg-white/10 flex flex-col gap-4"
         onSubmit={handleSubmit(onSubmit)}
+        method="post"
       >
         <label htmlFor="email" className="text-white flex flex-col">
           이메일
@@ -75,12 +73,9 @@ const LoginPage = () => {
             <p className="text-red-500">{errors.password.message}</p>
           )}
         </label>
-        <button className="text-white" type="submit">
-          로그인
-        </button>
+        <button className="text-white">로그인</button>
       </form>
     </div>
   );
 };
-
 export default LoginPage;

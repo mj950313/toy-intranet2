@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { UserType, SchedulesByDateType, ScheduleType, StateType } from '../types/user';
 import { useSelector } from 'react-redux';
 import { FaCalendarAlt } from "react-icons/fa";
+import CountUp from 'react-countup'; 
 
 const MyPage: React.FC = () => {
   const loginUser: UserType | null = useSelector((state: StateType) => state.user.loginUser);
@@ -35,6 +36,27 @@ const MyPage: React.FC = () => {
     return totalHours;
   };
 
+  // 월별로 필터링된 스케줄 데이터를 반환합니다.
+  const filterSchedulesByMonth = (schedules: SchedulesByDateType[], month: number): ScheduleType[] => {
+    const filteredSchedules: ScheduleType[] = [];
+    schedules.forEach(scheduleByDate => {
+      const [year, monthStr] = scheduleByDate.date.split('-');
+      const scheduleMonth = parseInt(monthStr);
+      if (parseInt(year) === new Date().getFullYear() && scheduleMonth === month) {
+        // 선택한 년도와 월에 해당하는 스케줄 데이터를 필터링합니다.
+        filteredSchedules.push(...scheduleByDate.schedules);
+      }
+    });
+    return filteredSchedules;
+  };
+
+  // 현재 월의 급여 계산 함수
+  const calculateMonthSalary = (user: UserType, schedules: ScheduleType[]): number => {
+    const workedHours = calculateWorkedHours(schedules);
+    const monthSalary = user.salary * workedHours;
+    return monthSalary;
+  };
+
   // 캘린더 아이콘 컴포넌트
   const CalendarIcon: React.FC<React.SVGProps<SVGSVGElement>> = (props) => {
     return <FaCalendarAlt {...props} />;
@@ -47,11 +69,15 @@ const MyPage: React.FC = () => {
     return todaySchedules ? todaySchedules.schedules : []; // 만약 오늘의 스케줄이 있다면 해당 스케줄을 반환하고, 없다면 빈 배열을 반환합니다.
   };
 
-  // 로그인한 사용자의 스케줄 정보 (이 부분은 빼도 됨)
+  // 로그인한 사용자의 스케줄 정보
   const userSchedules = loginUser ? loginUser.schedulesByDate : [];
 
   // 오늘의 스케줄 정보
   const todaySchedules = filterSchedulesForToday(userSchedules);
+
+  // 현재 월의 스케줄 정보
+  const currentMonth = new Date().getMonth() + 1; // 현재 월을 가져옵니다.
+  const currentMonthSchedules = filterSchedulesByMonth(userSchedules, currentMonth);
 
   return (
     <div className="container mx-auto px-4 py-8">
@@ -64,43 +90,24 @@ const MyPage: React.FC = () => {
           <p className="text-gray-600">Email: {loginUser.email}</p>
         </div>
       )}
-
-      {/* 스케줄 보드 표시 */}
-      <div className="bg-white shadow-md rounded mb-4 p-4">
-        <h2 className="text-xl font-semibold mb-2">Today's Schedule</h2>
-        {/* 오늘의 스케줄 정보 표시 */}
-        <CalendarIcon className="inline-block ml-2 text-gray-600" />
-        <div className="border border-gray-300 p-4">
-          {todaySchedules.length === 0 ? (
-            <p className="text-gray-700">No schedules for today.</p>
-          ) : (
-            <ul>
-              {todaySchedules.map((schedule, index) => (
-                <li key={index} className="text-gray-700">
-                  <span className="font-semibold">{schedule.time}</span> - {schedule.title}
-                </li>
-              ))}
-            </ul>
-          )}
-        </div>
-      </div>
-
+      
       {/* 급여 내역 확인 레이아웃 추가 */}
-      <div className="bg-white shadow-md rounded p-4">
+      <div className="bg-white shadow-md rounded mb-4 p-4">
         <h2 className="text-xl font-semibold mb-2">Payroll Details</h2>
         {/* 로그인한 사용자의 급여 및 일한 시간 정보 표시 */}
         {loginUser && (
-          <div key={loginUser.id} className="mb-4">
-            <h3 className="text-lg font-semibold mb-2">{loginUser.name}</h3>
-            <p className="text-gray-700">
-              일한 시간: {calculateWorkedHours(todaySchedules)} 시간
-            </p>
-            <p className="text-gray-700">
-              급여: {(loginUser.salary * calculateWorkedHours(todaySchedules)).toLocaleString()}₩
-              {/* 내장함수 toLocaleString 사용 1000단위로 쉼표 */}
-            </p>
-          </div>
-        )}
+        <div key={loginUser.id} className="mb-4">
+          <h3 className="text-lg font-semibold mb-2"></h3>
+          <p className="text-gray-700">
+            {loginUser.name}'s working for hours: {calculateWorkedHours(currentMonthSchedules)}H
+          </p>
+          {/* react-countup 라이브러리를 사용하여 급여 부분에 숫자 애니메이션 적용 */}
+          <p className="text-gray-700">
+            Salarys: {' '}
+            <CountUp start={0} end={calculateMonthSalary(loginUser, currentMonthSchedules)} duration={4} separator="," suffix=" ₩" />
+          </p>
+        </div>
+      )}
 
         {/* 급여 정정 신청 토글 */}
         <button onClick={toggleCorrectionForm} className="bg-myorange text-white font-semibold px-4 py-2 rounded">
@@ -120,9 +127,32 @@ const MyPage: React.FC = () => {
           </form>
         )}
       </div>
-    </div>
-  );
-}
 
+      {/* 스케줄 보드 표시 */}
+      <div className="bg-white shadow-md rounded mb-4 p-4 ">
+        <h2 className="text-xl font-semibold mb-2">Today's Schedule</h2>
+        {/* 오늘의 스케줄 정보 표시 */}
+        <CalendarIcon className="cursor-pointer" />
+        <div className='flex items-center justify-center'>
+        <div className="border border-gray-300 rounded p-4 h-[500px] w-[500px] flex items-center justify-center">
+          {todaySchedules.length === 0 ? (
+            <p className="text-gray-700">No schedules for today.</p>
+          ) : (
+            <ul>
+              {todaySchedules.map((schedule, index) => (
+                <li key={index} className="text-gray-700">
+                  <span className="font-semibold">{schedule.time}</span> - {schedule.title}
+                </li>
+              ))}
+            </ul>
+          )}
+        </div>
+        </div>
+      </div>
+
+      
+    </div>
+  ); 
+}
 
 export default MyPage;
