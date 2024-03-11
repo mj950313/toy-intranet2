@@ -9,9 +9,10 @@ import { deleteSchedule } from "../store/userSlice";
 type Props = {
   schedule: ScheduleType;
   date: string;
+  schedules: ScheduleType[];
 };
 
-export default function ScheduleItem({ schedule, date }: Props) {
+export default function ScheduleItem({ schedule, date, schedules }: Props) {
   const [isEditForm, setIsEditForm] = useState(false);
   const dispatch = useDispatch();
 
@@ -45,6 +46,7 @@ export default function ScheduleItem({ schedule, date }: Props) {
           onEditClose={toggleEditFormHandler}
           schedule={schedule}
           date={date}
+          schedules={schedules}
         />
       )}
     </>
