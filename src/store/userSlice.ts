@@ -58,7 +58,7 @@ export const counterSlice = createSlice({
         (s) => s.id === id
       );
 
-      Object.assign(selectedSchedule, newSchedule);
+      Object.assign({...selectedSchedule}, newSchedule);
     },
     deleteSchedule(state: ReducerStateType, action) {
       state.changed = true;
