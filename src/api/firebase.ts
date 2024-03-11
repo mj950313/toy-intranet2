@@ -1,9 +1,7 @@
 import { initializeApp } from "firebase/app";
 import {
-  User,
   browserSessionPersistence,
   getAuth,
-  onAuthStateChanged,
   setPersistence,
   signInWithEmailAndPassword,
 } from "firebase/auth";
@@ -22,19 +20,20 @@ const auth = getAuth(app);
 //   await signInWithEmailAndPassword(auth, email, password);
 // };
 
-export const login = async (email: string, password: string) => {
+export const login = async (
+  email: string,
+  password: string,
+  setIsLoading: (arg0: boolean) => void
+) => {
   try {
+    setIsLoading(true);
     await setPersistence(auth, browserSessionPersistence);
     const result = await signInWithEmailAndPassword(auth, email, password);
 
     localStorage.setItem("token", result.user.accessToken);
   } catch (error) {
     throw error;
+  } finally {
+    setIsLoading(false);
   }
-};
-
-export const listenToAuthChanges = (callback: (arg0: User | null) => void) => {
-  return onAuthStateChanged(auth, (user) => {
-    callback(user);
-  });
 };
