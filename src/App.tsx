@@ -13,6 +13,7 @@ import CalendarPage from "./pages/CalendarPage";
 import RootLayout from "./pages/RootLayout";
 import { checkAuthLoader, protectLoginPageLoader } from "./util/auth";
 import { logoutAction } from "./pages/Logout";
+import NotFoundPage from "./pages/NotFoundPage";
 
 function App() {
   const dispatch = useDispatch();
@@ -40,6 +41,11 @@ function App() {
         {
           path: "logout",
           action: logoutAction,
+        },
+        {
+          path: "*",
+          element: <NotFoundPage />,
+          loader: checkAuthLoader,
         },
       ],
     },

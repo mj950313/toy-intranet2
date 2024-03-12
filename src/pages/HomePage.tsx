@@ -6,9 +6,12 @@ import NextIcon from "../icons/NextIcon.tsx";
 import CalendarIcon from "../icons/CalendarIcon.tsx";
 import { StateType } from "../types/user.ts";
 import UsersSchedule from "../components/UsersSchedule.tsx";
+import { UiStateType } from "../types/ui.ts";
+import { GridLoader } from "react-spinners";
 
 export default function HomePage() {
   const users = useSelector((state: StateType) => state.user.users);
+  const isLoading = useSelector((state: UiStateType) => state.ui.dataIsLoading);
 
   const [datePicker, setDatePicker] = useState(formatTableDate(new Date()));
 
@@ -23,6 +26,14 @@ export default function HomePage() {
 
   const buttonStyle =
     "border border-myorange w-[40px] h-[30px] hover:bg-myorange hover:text-myblack transition";
+
+  if (isLoading) {
+    return (
+      <div className="absolute top-1/2 left-1/2 translate-x-[-50%] translate-y-[-50%]">
+        <GridLoader color="#f46804" />
+      </div>
+    );
+  }
 
   return (
     <section className="backdrop-blur-sm bg-white/10 p-4 rounded-md">

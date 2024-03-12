@@ -1,9 +1,15 @@
 import { Dispatch } from "@reduxjs/toolkit";
 import { replaceUsers } from "./userSlice";
 import { UserType } from "../types/user";
+import {
+  changeFetchStatus,
+  changeIsLoading,
+  changeSendStatus,
+} from "./uiSlice";
 
 export const fetchUsersData = () => {
   return async (dispatch: Dispatch) => {
+    dispatch(changeIsLoading(true));
     const fetchData = async () => {
       const response = await fetch(
         "https://toylogin2-default-rtdb.asia-southeast1.firebasedatabase.app/users.json"
@@ -14,15 +20,18 @@ export const fetchUsersData = () => {
 
     try {
       const usersData = await fetchData();
+      dispatch(changeFetchStatus(null));
       dispatch(replaceUsers(usersData));
     } catch (error) {
-      console.log(error);
+      dispatch(changeFetchStatus("데이터를 불러오는데에 실패했습니다."));
+    } finally {
+      dispatch(changeIsLoading(false));
     }
   };
 };
 
 export const sendUsersData = (users: UserType[]) => {
-  return async () => {
+  return async (dispatch: Dispatch) => {
     const sendRequest = async () => {
       const response = await fetch(
         "https://toylogin2-default-rtdb.asia-southeast1.firebasedatabase.app/users.json",
@@ -39,8 +48,9 @@ export const sendUsersData = (users: UserType[]) => {
 
     try {
       await sendRequest();
+      dispatch(changeSendStatus(null));
     } catch (error) {
-      console.log(error);
+      dispatch(changeSendStatus("데이터를 전송하지 못했습니다."));
     }
   };
 };

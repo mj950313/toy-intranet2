@@ -5,6 +5,8 @@ import AddIcon from "../icons/AddIcon";
 import ScheduleForm from "./ScheduleForm";
 import { useState } from "react";
 import ScheduleItem from "./ScheduleItem";
+import { useSelector } from "react-redux";
+import { UiStateType } from "../types/ui";
 
 type PropsType = {
   selectedSchedule: SchedulesByDateType;
@@ -18,6 +20,8 @@ export default function ScheduleModal({
   onClose,
 }: PropsType) {
   const { schedules } = selectedSchedule;
+
+  const sendError = useSelector((state: UiStateType) => state.ui.sendStatus);
 
   const sortedSchedules = [...schedules].sort(
     (a, b) => parseInt(a.time.split("-")[0]) - parseInt(b.time.split("-")[0])
@@ -42,6 +46,11 @@ export default function ScheduleModal({
         <p className="text-myorange mb-2 text-center">
           {formatDate(new Date(date))} 일정입니다.
         </p>
+        {sendError && (
+          <p className="text-center bg-red-300/40 text-red-500 mb-2 rounded-md">
+            {sendError}
+          </p>
+        )}
         <div className="bg-white/10 p-2 rounded-sm flex flex-col gap-2 max-h-[400px] overflow-scroll">
           {sortedSchedules.length > 0 &&
             sortedSchedules.map((schedule) => (
