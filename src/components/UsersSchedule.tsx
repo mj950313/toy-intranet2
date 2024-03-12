@@ -24,16 +24,19 @@ export default function UsersSchedule({ users, date }: PropsType) {
           return (
             <div key={user.id}>
               <div className="bg-white/10 rounded-md p-4">
-                <p className="text-center">{user.name}</p>
-                <div className="w-full h-[344px] overflow-y-scroll scrollbar-hide relative">
+                <p className="text-center mb-2">{user.name}</p>
+                <div
+                  className="w-full bg-white/10 rounded-sm p-4 h-[344px] overflow-y-scroll relative"
+                  id="scroll"
+                >
                   {times.map((time) => (
                     <div key={time} className="flex">
                       <p className="h-6 basis-1/6">{time}</p>
-                      <p className="basis-5/6 border-t border-myorange translate-y-3"></p>
+                      <p className="basis-5/6 border-t border-myorange/30 translate-y-3"></p>
                     </div>
                   ))}
                   {timeRange?.map((t) => {
-                    const startingHeight = 12 + t.start * 24;
+                    const startingHeight = 28 + t.start * 24;
                     const height = (t.end - t.start) * 24;
 
                     return (

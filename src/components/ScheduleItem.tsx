@@ -27,7 +27,7 @@ export default function ScheduleItem({ schedule, date, schedules }: Props) {
   return (
     <>
       {!isEditForm && (
-        <div className="bg-myorange text-white rounded-sm p-2 relative group">
+        <div className="bg-white/10 text-myorange rounded-sm p-2 relative group">
           <p>{schedule.time}</p>
           <p>제목: {schedule.title}</p>
           <p>설명: {schedule.description}</p>
