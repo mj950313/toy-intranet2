@@ -6,6 +6,7 @@ export default {
       colors: {
         myblack: "#0a0a0a",
         myorange: "#f46804",
+        mydarkorange: "#8C4100",
         mygray: "#1c1c1c",
       },
     },
