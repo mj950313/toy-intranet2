@@ -1,18 +1,20 @@
 import { Calendar, momentLocalizer } from "react-big-calendar";
 import moment from "moment";
 import "react-big-calendar/lib/css/react-big-calendar.css";
-
 import { useSelector } from "react-redux";
 import { StateType } from "../types/user";
 import ScheduleModal from "../components/ScheduleModal";
 import { useState } from "react";
 import { formatTableDate } from "../util/date";
+import CustomToolbar from "../Calendar/CustomToolbar.tsx";
+import CalendarStyles from "../Calendar/CalendarStyles.tsx";
+import 'moment/locale/ko';
 
 const localizer = momentLocalizer(moment);
 
 export default function CalendarPage() {
   const loginUser = useSelector((state: StateType) => state.user.loginUser);
-
+  
   const [isOpen, setIsOpen] = useState(false);
   const [date, setDate] = useState("");
 
@@ -33,12 +35,12 @@ export default function CalendarPage() {
       border: "1px solid",
       display: "flex",
       alignItems: "center",
+      justifyContent: "center",
     };
     return {
       style,
     };
   };
-
   //로그인한 유저의 데이터를 가공해서 전달
   const events = loginUser
     ? loginUser.schedulesByDate.flatMap((schedule) =>
@@ -63,39 +65,13 @@ export default function CalendarPage() {
   return (
     <>
       <div>
-        <style>
-          {`
-          .rbc-btn-group {
-            background-color: #f46804;
-            border-radius: 5px;
-          }
-          .rbc-toolbar-label {
-            font-size: 25px;
-          }
-          .rbc-time-view {
-            background-color: #fff;
-            border-radius: 5px;
-          }
-          .rbc-time-gutter rbc-time-column {
-
-          }
-          .rbc-day-bg {
-            background-color: #fff;
-          }
-          .rbc-off-range-bg {
-            background-color: #d1d1d1;
-          }
-          .rbc-header {
-            background-color: #8c4100;
-          }
-        `}
-        </style>
+        <CalendarStyles />
         <Calendar
-          localizer={localizer}
+          localizer={localizer} //특정 지역에 맞게 번역해주고 날짜 형식 설정을 관리하는 객체
           startAccessor="start"
           endAccessor="end"
           titleAccessor="title"
-          tooltipAccessor="description"
+          tooltipAccessor="description" //이벤트를 클릭이나 호버했을 때 나타나는 툴팁에 표시될 내용을 지정하는 데 사용함.
           eventPropGetter={eventStyleGetter} // 이벤트 스타일을 설정하는 함수 전달
           style={{ height: 900 }}
           views={["month", "week"]}
@@ -104,6 +80,9 @@ export default function CalendarPage() {
           onSelectSlot={(slotInfo) => {
             setDate(formatTableDate(slotInfo.slots[0]));
             setIsOpen(true);
+          }}
+          components={{
+            toolbar: CustomToolbar // 커스텀 툴바를 사용합니다.
           }}
         />
       </div>
