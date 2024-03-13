@@ -2,8 +2,9 @@ import { RouterProvider, createBrowserRouter } from "react-router-dom";
 import HomePage from "./pages/HomePage";
 import MyPage from "./pages/MyPage";
 import LoginPage from "./pages/LoginPage";
+import FooterPage from "./pages/FooterPage";
 
-import { useEffect } from "react";
+import { useState, useEffect } from "react"; 
 import { useDispatch, useSelector } from "react-redux";
 import { fetchUsersData, sendUsersData } from "./store/userActions";
 import { getAuth, onAuthStateChanged } from "firebase/auth";
@@ -20,6 +21,8 @@ function App() {
   const auth = getAuth();
   const user = useSelector((state: StateType) => state.user);
   const users = user.users;
+
+  const [isLoading, setIsLoading] = useState(true); // 로딩 상태 추가(setIsLoading)
 
   const router = createBrowserRouter([
     {
@@ -52,7 +55,7 @@ function App() {
   ]);
 
   useEffect(() => {
-    dispatch(fetchUsersData());
+    dispatch(fetchUsersData()).then(() => setIsLoading(false)); // 데이터 가져오기 완료 후 로딩 상태 변경
   }, [dispatch]);
 
   useEffect(() => {
@@ -74,7 +77,12 @@ function App() {
     return () => unsubscribe();
   }, [auth, users, dispatch]);
 
-  return <RouterProvider router={router} />;
+  return (
+    <>
+      <RouterProvider router={router} />
+      {!isLoading && <FooterPage />} {/* 로딩 중이 아닐 때만 푸터를 보여줌 */}
+    </>
+  );
 }
 
 export default App;
