@@ -1,19 +1,31 @@
 import { useState } from "react";
 import CloseIcon from "../icons/CloseIcon";
 import EditIcon from "../icons/EditIcon";
-import { ScheduleType } from "../types/user";
+import { ScheduleType, StateType } from "../types/user";
 import ScheduleForm from "./ScheduleForm";
-import { useDispatch } from "react-redux";
-import { deleteSchedule } from "../store/userSlice";
+import { useDispatch, useSelector } from "react-redux";
+import { sendUsersData } from "../store/userSlice";
+import { cloneDeep } from "lodash";
+import { ClipLoader } from "react-spinners";
 
 type Props = {
   schedule: ScheduleType;
   date: string;
   schedules: ScheduleType[];
+  setReqMode: (arg0: string) => void;
 };
 
-export default function ScheduleItem({ schedule, date, schedules }: Props) {
+export default function ScheduleItem({
+  schedule,
+  date,
+  schedules,
+  setReqMode,
+}: Props) {
   const [isEditForm, setIsEditForm] = useState(false);
+
+  const users = useSelector((state: StateType) => state.user.users);
+  const loginUser = useSelector((state: StateType) => state.user.loginUser);
+  const sendStatus = useSelector((state: StateType) => state.user.sendStatus);
   const dispatch = useDispatch();
 
   const toggleEditFormHandler = () => {
@@ -21,7 +33,22 @@ export default function ScheduleItem({ schedule, date, schedules }: Props) {
   };
 
   const deleteScheduleHandler = () => {
-    dispatch(deleteSchedule({ ...schedule, date }));
+    const newUsers = cloneDeep(users);
+    const selectedUser = newUsers.find((user) => user.id === loginUser?.id);
+
+    const selectedScheduleByDate = selectedUser?.schedulesByDate.find(
+      (s) => s.date === date
+    );
+
+    if (selectedScheduleByDate) {
+      const newSchedules = selectedScheduleByDate.schedules.filter(
+        (s) => s.id !== schedule.id
+      );
+
+      selectedScheduleByDate.schedules = newSchedules;
+    }
+    setReqMode("delete");
+    dispatch(sendUsersData(newUsers));
   };
 
   return (
@@ -31,13 +58,22 @@ export default function ScheduleItem({ schedule, date, schedules }: Props) {
           <p>{schedule.time}</p>
           <p>제목: {schedule.title}</p>
           <p>설명: {schedule.description}</p>
-          <CloseIcon
-            onClick={deleteScheduleHandler}
-            className="absolute top-2 right-2 text-xl opacity-0 group-hover:opacity-100 transition-opacity duration-500 cursor-pointer"
-          />
+          {sendStatus !== "pending" && (
+            <CloseIcon
+              onClick={deleteScheduleHandler}
+              className="absolute top-2 right-2 text-2xl opacity-0 group-hover:opacity-100 transition-opacity duration-500 cursor-pointer"
+            />
+          )}
+          {sendStatus === "pending" && (
+            <ClipLoader
+              className="absolute top-2 right-2 opacity-0 group-hover:opacity-100 transition-opacity duration-500 cursor-pointer"
+              color="#f46804"
+              size={24}
+            />
+          )}
           <EditIcon
             onClick={toggleEditFormHandler}
-            className="absolute bottom-2 right-2 text-xl opacity-0 group-hover:opacity-100 transition-opacity duration-500 cursor-pointer"
+            className="absolute bottom-2 right-2 text-2xl opacity-0 group-hover:opacity-100 transition-opacity duration-500 cursor-pointer"
           />
         </div>
       )}
@@ -47,6 +83,7 @@ export default function ScheduleItem({ schedule, date, schedules }: Props) {
           schedule={schedule}
           date={date}
           schedules={schedules}
+          setReqMode={setReqMode}
         />
       )}
     </>
