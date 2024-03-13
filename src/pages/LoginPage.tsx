@@ -117,7 +117,7 @@ const LoginPage = () => {
             Login
           </button>
         )}
-        {isLoading && <BeatLoader className="mx-auto my-4" color="white" />}
+        {isLoading && <BeatLoader className="mx-auto my-4" color="#f46804" />}
       </form>
     </div>
   );
