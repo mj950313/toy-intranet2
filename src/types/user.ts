@@ -2,8 +2,9 @@ export type StateType = {
   user: {
     users: UserType[];
     loginUser: UserType | null;
-    changed: boolean;
     isLogin: boolean;
+    fetchStatus: string;
+    sendStatus: string;
   };
 };
 

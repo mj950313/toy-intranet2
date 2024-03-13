@@ -1,9 +1,11 @@
 import { FormEvent, useState } from "react";
-import { ScheduleType } from "../types/user";
-import { useDispatch } from "react-redux";
-import { addSchedule, editSchedule } from "../store/userSlice";
+import { ScheduleType, StateType } from "../types/user";
+import { useDispatch, useSelector } from "react-redux";
+import { sendUsersData } from "../store/userSlice";
 import uuid from "react-uuid";
+import { cloneDeep } from "lodash";
 import { isValidTime, times } from "../util/time";
+import { BeatLoader } from "react-spinners";
 
 type Props = {
   onAddClose?: () => void;
@@ -11,6 +13,7 @@ type Props = {
   date: string;
   schedules: ScheduleType[];
   schedule?: ScheduleType;
+  setReqMode: (arg0: string) => void;
 };
 
 const emptySchedule = { id: "", title: "", time: "", description: "" };
@@ -22,10 +25,15 @@ export default function ScheduleForm({
   date,
   schedules,
   schedule = emptySchedule,
+  setReqMode,
 }: Props) {
   const { id, time, title, description } = schedule;
 
   const [error, setError] = useState("");
+
+  const users = useSelector((state: StateType) => state.user.users);
+  const loginUser = useSelector((state: StateType) => state.user.loginUser);
+  const sendStatus = useSelector((state: StateType) => state.user.sendStatus);
 
   const existingTimes = schedules.map((schedule) => schedule.time);
 
@@ -61,13 +69,61 @@ export default function ScheduleForm({
     }
 
     if (id) {
-      data.id = id;
-      dispatch(editSchedule(data));
-      onEditClose();
+      const newUsers = cloneDeep(users);
+
+      const selectedUser = newUsers.find((user) => user.id === loginUser?.id);
+
+      const selectedScheduleByDate = selectedUser?.schedulesByDate.find(
+        (s) => s.date === date
+      );
+
+      const selectedSchedule = selectedScheduleByDate?.schedules.find(
+        (s) => s.id === id
+      );
+
+      (selectedSchedule as ScheduleType).time = data.time;
+      (selectedSchedule as ScheduleType).title = data.title as string;
+      (selectedSchedule as ScheduleType).description =
+        data.description as string;
+      setReqMode("edit");
+      dispatch(sendUsersData(newUsers)).then(() => {
+        if (sendStatus === "fulfilled") {
+          onEditClose();
+        }
+      });
     } else {
       data.id = uuid();
-      dispatch(addSchedule(data));
-      onAddClose();
+      const newUsers = cloneDeep(users);
+      const newSchedule = {
+        id: data.id,
+        time: data.time,
+        title: data.title as string,
+        description: data.description as string,
+      };
+
+      const selectedUser = newUsers.find((user) => user.id === loginUser?.id);
+
+      const selectedScheduleByDate = selectedUser?.schedulesByDate.find(
+        (s) => s.date === date
+      );
+
+      if (selectedScheduleByDate) {
+        selectedScheduleByDate.schedules.push(newSchedule);
+      } else {
+        const newSchedulesByDate = {
+          id: uuid(),
+          date,
+          schedules: [newSchedule],
+        };
+        selectedUser?.schedulesByDate.push(newSchedulesByDate);
+      }
+
+      setReqMode("add");
+      dispatch(sendUsersData(newUsers)).then(() => {
+        if (sendStatus === "fulfilled") {
+          onAddClose();
+        }
+      });
     }
   };
 
@@ -132,9 +188,19 @@ export default function ScheduleForm({
         >
           취소
         </button>
-        <button className="w-full bg-myorange/70 text-black py-1 rounded-sm hover:bg-myorange transition">
-          확인
-        </button>
+        {sendStatus !== "pending" && (
+          <button className="w-full bg-myorange/70 text-black py-1 rounded-sm hover:bg-myorange transition">
+            확인
+          </button>
+        )}
+        {sendStatus === "pending" && (
+          <button className="w-full bg-myorange/70 text-black py-1 rounded-sm hover:bg-myorange transition">
+            <BeatLoader
+              className="flex justify-center leading-3"
+              color="black"
+            />
+          </button>
+        )}
       </div>
       {error && <p className="text-center">{error}</p>}
     </form>
