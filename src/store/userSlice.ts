@@ -1,97 +1,70 @@
-import { createSlice } from "@reduxjs/toolkit";
-import uuid from "react-uuid";
-import { UserType } from "../types/user";
-import { ReducerStateType } from "../types/user";
+import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import { getAuthToken } from "../util/auth";
+
+export const fetchUsersData = createAsyncThunk(
+  "userSlice/fetchUsersData",
+  async () => {
+    const response = await fetch(
+      "https://toylogin2-default-rtdb.asia-southeast1.firebasedatabase.app/users.json"
+    );
+    const data = await response.json();
+    return data;
+  }
+);
+
+export const sendUsersData = createAsyncThunk(
+  "userSlice/sendUsersData",
+  async (users) => {
+    const response = await fetch(
+      "https://toylogin2-default-rtdb.asia-southeast1.firebasedatabase.app/users.json",
+      {
+        method: "PUT",
+        body: JSON.stringify(users),
+      }
+    );
+    const data = await response.json();
+    return data;
+  }
+);
 
 export const counterSlice = createSlice({
   name: "user",
   initialState: {
     users: [],
     loginUser: null,
-    changed: false,
     isLogin: !!getAuthToken(),
+    fetchStatus: "",
+    sendStatus: "",
+  },
+  extraReducers: (builder) => {
+    builder.addCase(fetchUsersData.pending, (state) => {
+      state.fetchStatus = "pending";
+    });
+    builder.addCase(fetchUsersData.fulfilled, (state, action) => {
+      state.users = action.payload;
+      state.fetchStatus = "fulfilled";
+    });
+    builder.addCase(fetchUsersData.rejected, (state) => {
+      state.fetchStatus = "rejected";
+    });
+    builder.addCase(sendUsersData.pending, (state) => {
+      state.sendStatus = "pending";
+    });
+    builder.addCase(sendUsersData.fulfilled, (state, action) => {
+      state.users = action.payload;
+      state.sendStatus = "fulfilled";
+    });
+    builder.addCase(sendUsersData.rejected, (state) => {
+      state.sendStatus = "rejected";
+    });
   },
   reducers: {
-    replaceUsers(state, action) {
-      state.users = action.payload;
-    },
     replaceLoginUser(state, action) {
       state.loginUser = action.payload.loginUser;
       state.isLogin = action.payload.isLogin;
-    },
-    addSchedule(state: ReducerStateType, action) {
-      state.changed = true;
-      const { id, time, title, description, date } = action.payload;
-      const newSchedule = { id, time, title, description };
-
-      const selectedUser = state.users.find(
-        (user: UserType) => user.id === state.loginUser?.id
-      );
-
-      const selectedScheduleByDate = selectedUser?.schedulesByDate.find(
-        (s) => s.date === date
-      );
-
-      if (selectedScheduleByDate) {
-        selectedScheduleByDate.schedules.push(newSchedule);
-      } else {
-        const newSchedulesByDate = {
-          id: uuid(),
-          date,
-          schedules: [newSchedule],
-        };
-        selectedUser?.schedulesByDate.push(newSchedulesByDate);
-      }
-    },
-    editSchedule(state: ReducerStateType, action) {
-      state.changed = true;
-      const { id, time, title, description, date } = action.payload;
-      const newSchedule = { id, time, title, description };
-
-      const selectedUser = state.users.find(
-        (user: UserType) => user.id === state.loginUser?.id
-      );
-
-      const selectedScheduleByDate = selectedUser?.schedulesByDate.find(
-        (s) => s.date === date
-      );
-
-      const selectedSchedule = selectedScheduleByDate?.schedules.find(
-        (s) => s.id === id
-      );
-
-      Object.assign(selectedSchedule, newSchedule);
-    },
-    deleteSchedule(state: ReducerStateType, action) {
-      state.changed = true;
-
-      const { id, date } = action.payload;
-
-      const selectedUser = state.users.find(
-        (user: UserType) => user.id === state.loginUser?.id
-      );
-
-      const selectedScheduleByDate = selectedUser?.schedulesByDate.find(
-        (s) => s.date === date
-      );
-
-      if (selectedScheduleByDate) {
-        const newSchedules = selectedScheduleByDate.schedules.filter(
-          (s) => s.id !== id
-        );
-
-        selectedScheduleByDate.schedules = newSchedules;
-      }
     },
   },
 });
 
 export default counterSlice.reducer;
-export const {
-  replaceUsers,
-  replaceLoginUser,
-  addSchedule,
-  editSchedule,
-  deleteSchedule,
-} = counterSlice.actions;
+export const { replaceLoginUser } = counterSlice.actions;

@@ -5,6 +5,8 @@ import { StateType } from "../types/user";
 import { useNavigate } from "react-router";
 import { useEffect, useState } from "react";
 import { BeatLoader } from "react-spinners";
+import { BiUser } from "react-icons/bi";
+import { AiOutlineUnlock } from "react-icons/ai";
 
 interface FormData {
   email: string;
@@ -36,7 +38,7 @@ const LoginPage = () => {
       });
     }
     try {
-      login(data.email, data.password, setIsLoading);
+      await login(data.email, data.password, setIsLoading);
     } catch (err) {
       setError("password", {
         message: "비밀번호가 틀립니다.",
@@ -45,46 +47,77 @@ const LoginPage = () => {
   };
 
   return (
-    <div className="flex justify-center items-center">
+    <div
+      style={{ height: "calc(100vh - 350px)" }}
+      className="flex justify-center items-center"
+    >
       <form
-        className="w-[400px] rounded-lg p-4 bg-white/10 flex flex-col gap-4"
+        className="bg-white/30 w-[400px] rounded-lg p-4 backdrop-blur-sm flex flex-col items-center gap-4"
         onSubmit={handleSubmit(onSubmit)}
         method="post"
+        autoComplete="off"
       >
-        <label htmlFor="email" className="text-white flex flex-col">
-          이메일
-          <input
-            className="text-black"
-            type="email"
-            id="email"
-            {...register("email", {
-              required: "이메일을 입력하세요.",
-            })}
-          />
+        <h1 className="text-4xl font-bold m-6">TOY FIVE</h1>
+        <div className="w-full flex flex-col font-bold relative">
+          <label className="text-lg pb-2" htmlFor="email">
+            Email
+          </label>
+          <div className="relative">
+            <input
+              className="text-black/60 bg-white/30 rounded-md py-1.5 pl-1 w-full outline-none"
+              type="email"
+              id="email"
+              {...register("email", {
+                required: "이메일을 입력하세요.",
+              })}
+            />
+            <BiUser
+              className="absolute right-3 bottom-[-1px] text-myorange text-xl"
+              style={{ transform: "translateY(-50%)" }}
+            />
+          </div>
           {errors.email && (
-            <p className="text-red-500">{errors.email.message}</p>
+            <p className="text-myorange text-center p-1 my-2 bg-white/10 rounded-md">
+              {errors.email.message}
+            </p>
           )}
-        </label>
-        <label htmlFor="password" className="text-white flex flex-col">
-          비밀번호
-          <input
-            className="text-black"
-            type="password"
-            id="password"
-            {...register("password", {
-              required: "비밀번호를 입력하세요.",
-              minLength: {
-                value: 6,
-                message: "비밀번호는 최소 6자 이상이어야 합니다.",
-              },
-            })}
-          />
+        </div>
+
+        <div className="w-full flex flex-col font-bold relative">
+          <label className="text-lg pb-2" htmlFor="password">
+            Password
+          </label>
+          <div className="relative">
+            <input
+              className="text-black/60 bg-white/30 rounded-md py-1.5 pl-1 w-full outline-none"
+              type="password"
+              id="password"
+              {...register("password", {
+                required: "비밀번호를 입력하세요.",
+                minLength: {
+                  value: 6,
+                  message: "비밀번호는 최소 6자 이상이어야 합니다.",
+                },
+              })}
+            />
+            <AiOutlineUnlock
+              className="absolute right-3 bottom-[-1px] text-myorange text-xl"
+              style={{ transform: "translateY(-50%)" }}
+            />
+          </div>
           {errors.password && (
-            <p className="text-red-500">{errors.password.message}</p>
+            <p className="text-myorange text-center p-1 my-2 bg-white/10 rounded-md">
+              {errors.password.message}
+            </p>
           )}
-        </label>
-        {!isLoading && <button className="text-white">로그인</button>}
-        {isLoading && <BeatLoader className="mx-auto" color="white" />}
+        </div>
+
+        {!isLoading && (
+          <button className="text-white my-4 p-3 w-full text-[18px] rounded-full bg-myorange">
+            Login
+          </button>
+        )}
+        {isLoading && <BeatLoader className="mx-auto my-4" color="#f46804" />}
       </form>
     </div>
   );
