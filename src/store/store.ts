@@ -8,5 +8,5 @@ export const store = configureStore({
   },
 });
 
-// type AppDispatch = typeof store.dispatch;
-export const useAppDispatch = () => useDispatch<any>();
+type AppDispatch = typeof store.dispatch;
+export const useAppDispatch = () => useDispatch<AppDispatch>();
