@@ -1,4 +1,4 @@
-import React from "react";
+import React, {useState } from "react";
 import {
   UserType,
   SchedulesByDateType,
@@ -8,8 +8,12 @@ import {
 import { useSelector } from "react-redux";
 import CountUp from "react-countup";
 import { GridLoader } from "react-spinners";
+import DownIcon from "../icons/DownIcon.tsx";
+import UpIcon from "../icons/UpIcon.tsx";
+
 
 const MyPage: React.FC = () => {
+  const [showDescriptions, setShowDescriptions] = useState<boolean[]>([]);
   const loginUser: UserType | null = useSelector(
     (state: StateType) => state.user.loginUser
   );
@@ -32,7 +36,7 @@ const MyPage: React.FC = () => {
       const [startHour, endHour] = schedule.time
         .split("-")
         .map((time) => parseInt(time));
-      totalHours += endHour - startHour; // 시작 시간과 종료 시간의 차이를 더합니다.
+      totalHours += endHour - startHour;
     });
     return totalHours;
   };
@@ -86,14 +90,22 @@ const MyPage: React.FC = () => {
 
   // 현재 월의 스케줄 정보
   const currentMonth = new Date().getMonth() + 1; // 현재 월을 가져옵니다.
-  const currentMonthSchedules = filterSchedulesByMonth(
-    userSchedules,
-    currentMonth
-  );
+  const currentMonthSchedules = filterSchedulesByMonth(userSchedules, currentMonth);
+  
+
+  // 스케줄 description 토글 함수
+  const toggleDescription = (index: number) => {
+    setShowDescriptions((prev) => {
+      const newShowDescriptions = [...prev];
+      newShowDescriptions[index] = !newShowDescriptions[index];
+      return newShowDescriptions;
+    });
+  };
+
 
   return (
     <div className="backdrop-blur-sm bg-white/10 rounded-md container mx-auto pt-[25px] pb-[25px] px-5 py-8">
-      <h1 className="text-3xl font-bold mb-8">MyPage</h1>
+      <h1 className="text-3xl font-bold pl-[15px] mb-8">MyPage</h1>
 
       {/* 로그인 사용자 정보 표시 */}
       {loginUser && (
@@ -136,29 +148,36 @@ const MyPage: React.FC = () => {
 
       {/* 스케줄 보드 표시 */}
       <div className="bg-white/10 shadow-md rounded-md mb-4 p-4 ">
-        <h2 className="flex justify-center text-xl font-semibold mb-2">
-          Today's Schedule
-        </h2>
+        <h2 className="flex justify-center text-xl font-semibold mb-2">Today's Schedule</h2>
         {/* 오늘의 스케줄 정보 표시 */}
-        <div className="flex items-center justify-center">
-          <div className="flex items-center justify-center">
-            {todaySchedules.length === 0 ? (
-              <p className="text-white">No schedules for today.</p>
-            ) : (
-              <ul>
-                {todaySchedules.map((schedule, index) => (
-                  <div key={index} className="text-white mb-[12px]">
-                    <p className="font-semibold">
-                      Description : {schedule.title}
-                    </p>
-                    <p className="font-semibold text-center">
-                      Time : {schedule.time}
-                    </p>
+        <div className='bg-white/10 shadow-md rounded-md relative'>
+          {todaySchedules.length === 0 ? (
+            <p className="text-white">No schedules for today.</p>
+          ) : (
+            <div>
+              {todaySchedules.map((schedule, index) => (
+                <div key={index} className="text-white p-2 relative ">
+                  <div className="bg-white/10 shadow-md rounded-md p-4">
+                    <div>
+                      <p className="font-semibold text-center">Title : {schedule.title} </p> 
+                      <p className="font-semibold text-center">Time : {schedule.time}</p>
+                      {/* 설명을 표시할지 여부에 따라 표시 */}
+                      {showDescriptions[index] && (
+                        <p className="font-semibold text-center mt-1">Description : {schedule.description}</p>
+                      )}
+                    </div>
+                    <button 
+                      className="font-semibold text-myorange hover:underline 
+                      absolute top-1/2 transform -translate-y-1/2 right-4"
+                      onClick={() => toggleDescription(index)}
+                    >
+                      {showDescriptions[index] ? <UpIcon /> : <DownIcon />}
+                    </button>
                   </div>
-                ))}
-              </ul>
-            )}
-          </div>
+                </div>
+              ))}
+            </div>
+          )}
         </div>
       </div>
     </div>
