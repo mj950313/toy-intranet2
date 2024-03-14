@@ -1,10 +1,5 @@
 import { initializeApp } from "firebase/app";
-import {
-  browserSessionPersistence,
-  getAuth,
-  setPersistence,
-  signInWithEmailAndPassword,
-} from "firebase/auth";
+import { getAuth, signInWithEmailAndPassword } from "firebase/auth";
 const firebaseConfig = {
   apiKey: import.meta.env.VITE_API_KEY,
   authDomain: import.meta.env.VITE_AUTH_DOMAIN,
@@ -21,7 +16,6 @@ export const login = async (
 ) => {
   try {
     setIsLoading(true);
-    await setPersistence(auth, browserSessionPersistence);
     const result = await signInWithEmailAndPassword(auth, email, password);
     const user = result.user;
     const accessToken = await user.getIdToken();
