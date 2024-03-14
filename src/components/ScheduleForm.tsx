@@ -88,9 +88,7 @@ export default function ScheduleForm({
         data.description as string;
       setReqMode("edit");
       dispatch(sendUsersData(newUsers)).then(() => {
-        if (sendStatus === "fulfilled") {
-          onEditClose();
-        }
+        onEditClose();
       });
     } else {
       data.id = uuid();
@@ -121,9 +119,7 @@ export default function ScheduleForm({
 
       setReqMode("add");
       dispatch(sendUsersData(newUsers)).then(() => {
-        if (sendStatus === "fulfilled") {
-          onAddClose();
-        }
+        onAddClose();
       });
     }
   };
@@ -133,6 +129,11 @@ export default function ScheduleForm({
       onSubmit={onSubmitHandler}
       className="bg-white/10 p-3 rounded-sm text-myorange flex flex-col gap-2"
     >
+      {error && (
+        <p className="text-center bg-red-500 text-white p-1 rounded-sm">
+          {error}
+        </p>
+      )}
       <div className="flex justify-between">
         <label>시작시간</label>
         <select
@@ -203,7 +204,6 @@ export default function ScheduleForm({
           </button>
         )}
       </div>
-      {error && <p className="text-center">{error}</p>}
     </form>
   );
 }

@@ -1,7 +1,7 @@
 import { useState } from "react";
 import CloseIcon from "../icons/CloseIcon";
 import EditIcon from "../icons/EditIcon";
-import { ScheduleType, StateType } from "../types/user";
+import { ScheduleType, SchedulesByDateType, StateType } from "../types/user";
 import ScheduleForm from "./ScheduleForm";
 import { useSelector } from "react-redux";
 import { sendUsersData } from "../store/userSlice";
@@ -41,14 +41,31 @@ export default function ScheduleItem({
       (s) => s.date === date
     );
 
-    if (selectedScheduleByDate) {
+    setReqMode("delete");
+
+    if (!selectedScheduleByDate) {
+      return;
+    }
+
+    if (selectedScheduleByDate?.schedules.length > 1) {
       const newSchedules = selectedScheduleByDate.schedules.filter(
         (s) => s.id !== schedule.id
       );
 
       selectedScheduleByDate.schedules = newSchedules;
+    } else if (selectedScheduleByDate.schedules.length === 1) {
+      const newSchedulesByDate = loginUser?.schedulesByDate.filter(
+        (s) => s.date !== date
+      );
+
+      if (!selectedUser) {
+        return;
+      }
+
+      selectedUser.schedulesByDate =
+        newSchedulesByDate as SchedulesByDateType[];
     }
-    setReqMode("delete");
+
     dispatch(sendUsersData(newUsers));
   };
 
