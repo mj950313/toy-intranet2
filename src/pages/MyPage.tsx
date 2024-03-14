@@ -1,4 +1,4 @@
-import React, {useState } from "react";
+import React, { useState } from "react";
 import {
   UserType,
   SchedulesByDateType,
@@ -10,7 +10,6 @@ import CountUp from "react-countup";
 import { GridLoader } from "react-spinners";
 import DownIcon from "../icons/DownIcon.tsx";
 import UpIcon from "../icons/UpIcon.tsx";
-
 
 const MyPage: React.FC = () => {
   const [showDescriptions, setShowDescriptions] = useState<boolean[]>([]);
@@ -90,8 +89,10 @@ const MyPage: React.FC = () => {
 
   // 현재 월의 스케줄 정보
   const currentMonth = new Date().getMonth() + 1; // 현재 월을 가져옵니다.
-  const currentMonthSchedules = filterSchedulesByMonth(userSchedules, currentMonth);
-  
+  const currentMonthSchedules = filterSchedulesByMonth(
+    userSchedules,
+    currentMonth
+  );
 
   // 스케줄 description 토글 함수
   const toggleDescription = (index: number) => {
@@ -101,7 +102,6 @@ const MyPage: React.FC = () => {
       return newShowDescriptions;
     });
   };
-
 
   return (
     <div className="backdrop-blur-sm bg-white/10 rounded-md container mx-auto pt-[25px] pb-[25px] px-5 py-8">
@@ -148,9 +148,11 @@ const MyPage: React.FC = () => {
 
       {/* 스케줄 보드 표시 */}
       <div className="bg-white/10 shadow-md rounded-md mb-4 p-4 ">
-        <h2 className="flex justify-center text-xl font-semibold mb-2">Today's Schedule</h2>
+        <h2 className="flex justify-center text-xl font-semibold mb-2">
+          Today's Schedule
+        </h2>
         {/* 오늘의 스케줄 정보 표시 */}
-        <div className='bg-white/10 shadow-md rounded-md relative'>
+        <div className="bg-white/10 shadow-md rounded-md relative">
           {todaySchedules.length === 0 ? (
             <p className="text-white">No schedules for today.</p>
           ) : (
@@ -159,16 +161,22 @@ const MyPage: React.FC = () => {
                 <div key={index} className="text-white p-2 relative ">
                   <div className="bg-white/10 shadow-md rounded-md p-4">
                     <div>
-                      <p className="font-semibold text-center">Title : {schedule.title} </p> 
-                      <p className="font-semibold text-center">Time : {schedule.time}</p>
+                      <p className="font-semibold text-center">
+                        Title : {schedule.title}{" "}
+                      </p>
+                      <p className="font-semibold text-center">
+                        Time : {schedule.time}
+                      </p>
                       {/* 설명을 표시할지 여부에 따라 표시 */}
                       {showDescriptions[index] && (
-                        <p className="font-semibold text-center mt-1">Description : {schedule.description}</p>
+                        <p className="font-semibold text-center mt-1">
+                          Description : {schedule.description}
+                        </p>
                       )}
                     </div>
-                    <button 
+                    <button
                       className="font-semibold text-myorange hover:underline 
-                      absolute top-1/2 transform -translate-y-1/2 right-4"
+                      absolute top-[34px] right-4"
                       onClick={() => toggleDescription(index)}
                     >
                       {showDescriptions[index] ? <UpIcon /> : <DownIcon />}
