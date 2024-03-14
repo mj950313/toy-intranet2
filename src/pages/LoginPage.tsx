@@ -64,7 +64,7 @@ const LoginPage = () => {
           </label>
           <div className="relative">
             <input
-              className="text-black/60 bg-white/30 rounded-md py-1.5 pl-2 w-full outline-none"
+              className="text-black/60 bg-white/30 rounded-md py-1.5 pl-1 w-full outline-none"
               type="email"
               id="email"
               {...register("email", {
@@ -89,7 +89,7 @@ const LoginPage = () => {
           </label>
           <div className="relative">
             <input
-              className="text-black/60 bg-white/30 rounded-md py-1.5 pl-2 w-full outline-none"
+              className="text-black/60 bg-white/30 rounded-md py-1.5 pl-1 w-full outline-none"
               type="password"
               id="password"
               {...register("password", {
@@ -113,11 +113,11 @@ const LoginPage = () => {
         </div>
 
         {!isLoading && (
-          <button className="text-white my-4 p-3 w-full text-[18px] rounded-full bg-[#da7832]  hover:bg-myorange transition-colors">
+          <button className="text-white my-4 p-3 w-full text-[18px] rounded-full bg-myorange">
             Login
           </button>
         )}
-        {isLoading && <BeatLoader className="mx-auto my-4" color="#da7832" />}
+        {isLoading && <BeatLoader className="mx-auto my-4" color="#f46804" />}
       </form>
     </div>
   );

@@ -4,18 +4,19 @@ import MyPage from "./pages/MyPage";
 import LoginPage from "./pages/LoginPage";
 
 import { useEffect } from "react";
-import { useDispatch, useSelector } from "react-redux";
-import { fetchUsersData, sendUsersData } from "./store/userActions";
+import { useSelector } from "react-redux";
 import { getAuth, onAuthStateChanged } from "firebase/auth";
-import { replaceLoginUser } from "./store/userSlice";
+import { fetchUsersData, replaceLoginUser } from "./store/userSlice";
 import { StateType } from "./types/user";
 import CalendarPage from "./pages/CalendarPage";
 import RootLayout from "./pages/RootLayout";
 import { checkAuthLoader, protectLoginPageLoader } from "./util/auth";
 import { logoutAction } from "./pages/Logout";
+import NotFoundPage from "./pages/NotFoundPage";
+import { useAppDispatch } from "./store/store";
 
 function App() {
-  const dispatch = useDispatch();
+  const dispatch = useAppDispatch();
   const auth = getAuth();
   const user = useSelector((state: StateType) => state.user);
   const users = user.users;
@@ -41,6 +42,11 @@ function App() {
           path: "logout",
           action: logoutAction,
         },
+        {
+          path: "*",
+          element: <NotFoundPage />,
+          loader: checkAuthLoader,
+        },
       ],
     },
   ]);
@@ -48,12 +54,6 @@ function App() {
   useEffect(() => {
     dispatch(fetchUsersData());
   }, [dispatch]);
-
-  useEffect(() => {
-    if (user.changed) {
-      dispatch(sendUsersData(users));
-    }
-  }, [user, dispatch, users]);
 
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, (user) => {
