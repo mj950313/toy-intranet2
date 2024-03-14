@@ -3,10 +3,11 @@ import CloseIcon from "../icons/CloseIcon";
 import EditIcon from "../icons/EditIcon";
 import { ScheduleType, StateType } from "../types/user";
 import ScheduleForm from "./ScheduleForm";
-import { useDispatch, useSelector } from "react-redux";
+import { useSelector } from "react-redux";
 import { sendUsersData } from "../store/userSlice";
 import { cloneDeep } from "lodash";
 import { ClipLoader } from "react-spinners";
+import { useAppDispatch } from "../store/store";
 
 type Props = {
   schedule: ScheduleType;
@@ -26,7 +27,7 @@ export default function ScheduleItem({
   const users = useSelector((state: StateType) => state.user.users);
   const loginUser = useSelector((state: StateType) => state.user.loginUser);
   const sendStatus = useSelector((state: StateType) => state.user.sendStatus);
-  const dispatch = useDispatch();
+  const dispatch = useAppDispatch();
 
   const toggleEditFormHandler = () => {
     setIsEditForm(!isEditForm);

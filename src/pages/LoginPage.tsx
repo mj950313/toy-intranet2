@@ -7,6 +7,7 @@ import { useEffect, useState } from "react";
 import { BeatLoader } from "react-spinners";
 import { BiUser } from "react-icons/bi";
 import { AiOutlineUnlock } from "react-icons/ai";
+import { getAuthToken } from "../util/auth";
 
 interface FormData {
   email: string;
@@ -25,10 +26,11 @@ const LoginPage = () => {
   const navigate = useNavigate();
 
   const [isLoading, setIsLoading] = useState(false);
+  const token = getAuthToken();
 
   useEffect(() => {
     navigate("/");
-  }, [navigate]);
+  }, [navigate, token]);
 
   const onSubmit: SubmitHandler<FormData> = async (data) => {
     const user = users.find((user) => user.email === data.email);
