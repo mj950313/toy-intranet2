@@ -1,4 +1,18 @@
+import { useLocation } from "react-router";
+
 const Footer = () => {
+  const { pathname } = useLocation();
+
+  const isInValid =
+    pathname !== "/" &&
+    pathname !== "/login" &&
+    pathname !== "/mypage" &&
+    pathname !== "/calendar";
+
+  if (isInValid) {
+    return null;
+  }
+
   return (
     <footer className="text-myorange py-4 mt-[40px] mb-[40px]">
       <div className="container mx-auto px-[140px] gap-[40px] flex justify-center items-center">
