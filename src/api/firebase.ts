@@ -13,9 +13,7 @@ const firebaseConfig = {
 };
 export const app = initializeApp(firebaseConfig);
 const auth = getAuth(app);
-// export const login = async (email: string, password: string) => {
-//   await signInWithEmailAndPassword(auth, email, password);
-// };
+
 export const login = async (
   email: string,
   password: string,
@@ -25,7 +23,9 @@ export const login = async (
     setIsLoading(true);
     await setPersistence(auth, browserSessionPersistence);
     const result = await signInWithEmailAndPassword(auth, email, password);
-    localStorage.setItem("token", result.user.accessToken);
+    const user = result.user;
+    const accessToken = await user.getIdToken();
+    localStorage.setItem("token", accessToken);
   } catch (error) {
     throw error;
   } finally {
