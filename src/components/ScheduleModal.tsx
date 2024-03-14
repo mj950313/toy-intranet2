@@ -46,7 +46,7 @@ export default function ScheduleModal({
         <p className="text-myorange mb-2 text-center">
           {formatDate(new Date(date))} 일정입니다.
         </p>
-        <div className="bg-white/10 p-2 rounded-sm flex flex-col gap-2 max-h-[400px] overflow-scroll">
+        <div className="bg-white/10 p-2 rounded-sm flex flex-col gap-2 max-h-[400px] overflow-y-scroll">
           {sortedSchedules.length > 0 &&
             sortedSchedules.map((schedule) => (
               <ScheduleItem
