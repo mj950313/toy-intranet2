@@ -1,5 +1,6 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import { getAuthToken } from "../util/auth";
+import { UserType } from "../types/user";
 
 export const fetchUsersData = createAsyncThunk(
   "userSlice/fetchUsersData",
@@ -14,7 +15,7 @@ export const fetchUsersData = createAsyncThunk(
 
 export const sendUsersData = createAsyncThunk(
   "userSlice/sendUsersData",
-  async (users) => {
+  async (users: UserType[]) => {
     const response = await fetch(
       "https://toylogin2-default-rtdb.asia-southeast1.firebasedatabase.app/users.json",
       {

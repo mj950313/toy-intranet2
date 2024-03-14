@@ -1,11 +1,12 @@
 import { FormEvent, useState } from "react";
 import { ScheduleType, StateType } from "../types/user";
-import { useDispatch, useSelector } from "react-redux";
+import { useSelector } from "react-redux";
 import { sendUsersData } from "../store/userSlice";
 import uuid from "react-uuid";
 import { cloneDeep } from "lodash";
 import { isValidTime, times } from "../util/time";
 import { BeatLoader } from "react-spinners";
+import { useAppDispatch } from "../store/store";
 
 type Props = {
   onAddClose?: () => void;
@@ -45,7 +46,7 @@ export default function ScheduleForm({
 
   const [startTime, endTime] = time.split("-");
 
-  const dispatch = useDispatch();
+  const dispatch = useAppDispatch();
 
   const onSubmitHandler = (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
